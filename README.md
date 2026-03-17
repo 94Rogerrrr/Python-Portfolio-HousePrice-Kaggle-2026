@@ -16,7 +16,7 @@ first problem, there are 80+ columns, how do I be able to check every column has
 - 查看負相關的數值，發現最低相關為 KitchenAbvGr -0.135907 然而其欄位在說明手冊上卻沒有定義。依據欄位名稱拆解，應該是屬於地面上廚房的相關內容，但不確定單位為何。
 - 
 ### 箱型圖解讀
-- 從第一行中間的 GrLivArea 及中間三張圖，GarageArea、 TotalBsmtSF、1stFlrSF 的圖片與離峰值的位置，可判斷這些欄位之資料並非常態分佈，明顯有左偏分布的傾向。
+- 從第一行的 SalePrice, GrLivArea 及中間三張圖，GarageArea、 TotalBsmtSF、1stFlrSF 的圖片與離峰值的位置，可判斷這些欄位之資料並非常態分佈，明顯有右偏分布的傾向。
 - 實際上是否為左偏分布的狀態，應依據 skew 數值結果
 
 ### 散佈圖解讀
@@ -29,17 +29,18 @@ first problem, there are 80+ columns, how do I be able to check every column has
 - 其他項目之影響不如 GrLivArea 來得高，且撇除以刪除之離峰值後，剩下有離峰值嫌疑的資料予以保留。
 
 _(這裡放一張漂亮的 SHAP 或特徵重要性圖表)_
-- 發現 1：翻修廚房比增建泳池更能顯著提升房價。
-- 發現 2：雖然坪數重要，但當屋齡超過 20 年後，坪數對價格的邊際效應會遞減。
+- 發現 1：整體品質跟房價有顯著正相關
+- 發現 2：坪數與所處的社區 Neighbor 跟房價有高度相關。
+- 雖然坪數重要，但當屋齡超過 20 年後，坪數對價格的邊際效應會遞減。
 ## 3. 資料處理 (Data Methodology) —— _這裡寫剛剛的健檢結果_
 - **清洗**：
   - 若對所有特徵的離峰值都進行整筆資料刪除，此行為恐導致資料枯竭，故針對高相關係數之特徵篩除離峰值，以免其極端值帶來的高槓桿效應，嚴重影響模型學習
   - 故針對 GrLivArea 特徵，移除了 2 筆極端異常值。
   - 針對次要相關係數之離峰值，予以保留。首先，保留該觀測值，可使模型能學習到該筆資料於其他正常特徵上的資訊；其次，最高的離峰值也同 GrLivArea 的資料一起刪除；再來，其相關係數影響不如 GrLivArea 高，故衡量資料的模型學習效果與極端值的影響後，決定予以保留。
 - **填補**：
-  - 針對 object 資料型態，根據有 null 的欄位去比對欄位手冊 txt 檔案，發現 Electical 沒有定義 NA 的項目，顯然這筆資料明顯有缺失
-- MasVnrType 定義為房屋工程上的外牆貼磚，要有貼磚 MasVnrType 才會有貼磚面積 MasVnrArea。發現沒有貼磚材質類型卻有貼磚面積的衝突資料，並且採信貼磚面積，判斷是缺少貼磚類型，共 5 筆。針對字串類型資料，這 5 筆採用眾數方式填入。
-- MasVnrType 與 MasVnrArea 若兩者皆為 NaN 屬於合理範圍，表示房子沒有貼磚，故無貼磚面積。共 8 筆
+  - 釐清高度相關 17 項指標，其缺失值均為文字型態的無設施，因此補 0
+  - 文字資料型態：其中 7 項文字型態，分別依照手冊說明定義映射方式與映射值。Neighborhood 套用 Target Encodinge；Foundation 套用 One-Hot Encoding，其餘套用 Label Encoding。
+
 ## 4. 模型表現 (Model Performance)
 - Baseline (Linear): RMSE 0.18
 - Final Model (XGBoost): RMSE 0.12 (**提升 33%**)
