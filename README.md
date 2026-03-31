@@ -36,22 +36,29 @@ _(這裡放一張漂亮的 SHAP 或特徵重要性圖表)_
     - Foundation_PConc   = 0.53
     - Foundation_infrequent_sklearn  = - 0.30
     - Foundation_CBlock   = -0.33
-  可知使用 PConc 材質對房價有正相關，而使用其他材質會有負相關。
-- 發現 4: 
+<br>可知使用 PConc 材質對房價有正相關，而使用其他材質會有負相關。
+
 ## 3. 資料處理 (Data Methodology) —— _這裡寫剛剛的健檢結果_
 - **清洗**：
+- 針對 OLS 線性模型
   - 若對所有特徵的離峰值都進行整筆資料刪除，此行為恐導致資料枯竭，故針對高相關係數之特徵篩除離峰值，以免其極端值帶來的高槓桿效應，嚴重影響模型學習
   - 故針對 GrLivArea 特徵，移除了 2 筆極端異常值。
   - 針對次要相關係數之離峰值，予以保留。首先，保留該觀測值，可使模型能學習到該筆資料於其他正常特徵上的資訊；其次，最高的離峰值也同 GrLivArea 的資料一起刪除；再來，其相關係數影響不如 GrLivArea 高，故衡量資料的模型學習效果與極端值的影響後，決定予以保留。
   - 套用 Skewness 檢查資料分佈的偏移狀態，針對分數 > 0.5 之指標套用常態化，對此類指標取 log 。
   - 17 項指標單位不同以至於數據的尺度差異大，故使用 StandardScaler 降低尺度差異造成的影響。
+  - 第一次執行 OLS 模型評估指標顯示有較明顯的異質變異數問題，故刪除殘差分佈超過三個標準差之資料，共 14 筆。
 - **填補**：
   - 釐清高度相關 17 項指標，其缺失值均為文字型態的無設施，因此補 0
   - 文字資料型態：其中 7 項文字型態，分別依照手冊說明定義映射方式與映射值。
     - Neighborhood 套用 Target Encodinge；Foundation 套用 One-Hot Encoding，其餘套用 Label Encoding。
+    - 透過 VIF 檢查，發現拆成 one hot encoding 的 Foundation 地基材質出現設計矩陣奇異的狀況，造成完美共線性。因此刪除數量最小的欄位，以解決線性模型檢定的問題。
 
 ## 4. 模型表現 (Model Performance)
-- Baseline (Linear): RMSE 0.18
+- Baseline (OLS_Linear):
+    - r^2 : 0.89
+    - rmse : 0.15
+    - rmse_gap : 0.19
+    - 此模型預測結果上傳 Kaggle OLS 模型與 12項指標的 public Score 為 0.15445，將以此模型為基準線。
 - Final Model (XGBoost): RMSE 0.12 (**提升 33%**)
 
 ##### draft
