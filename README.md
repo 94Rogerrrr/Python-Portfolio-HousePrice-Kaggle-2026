@@ -23,7 +23,7 @@ first problem, there are 80+ columns, how do I be able to check every column has
 - 離峰值判讀：遠離聚集或是遠離趨勢的點。
 - 從第一行中間的 GrLivArea 及中間三張圖，GarageArea、 TotalBsmtSF、1stFlrSF 的圖片，離散與密集程度，可判斷這些欄位之資料具有明顯的離峰值。
 
-#### 離峰值
+### 離峰值
 - 綜合散佈圖資訊與查詢結果，發現 GrLivArea 的兩筆離峰值，也正好是其他欄位的離峰值項目。故優先刪減這兩筆資料。
 - GrLivArea 的相關係數高，若有極端值易影響模型預測結果。
 - 其他項目之影響不如 GrLivArea 來得高，且撇除以刪除之離峰值後，剩下有離峰值嫌疑的資料予以保留。
