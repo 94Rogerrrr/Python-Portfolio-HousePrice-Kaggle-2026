@@ -50,7 +50,7 @@ _(這裡放一張漂亮的 SHAP 或特徵重要性圖表)_
   - **填補**：
       - 釐清高度相關 17 項指標，其缺失值均為文字型態的無設施，因此補 0
       - 文字資料型態：其中 7 項文字型態，分別依照手冊說明定義映射方式與映射值。
-      - Neighborhood 套用 Target Encodinge；Foundation 套用 One-Hot Encoding，其餘套用 Label Encoding。
+      - Neighborhood 套用 Target Encodinge；Foundation 套用 One-Hot Encoding，其餘套用手動 mapping 轉換。
       - 透過 VIF 檢查，發現拆成 one hot encoding 的 Foundation 地基材質出現設計矩陣奇異的狀況，造成完美共線性。因此刪除數量最小的欄位，以解決線性模型檢定的問題。
 
 - 針對 樹模型
