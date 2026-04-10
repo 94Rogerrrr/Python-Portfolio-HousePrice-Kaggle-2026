@@ -53,11 +53,15 @@ _(這裡放一張漂亮的 SHAP 或特徵重要性圖表)_
       - Neighborhood 套用 Target Encodinge；Foundation 套用 One-Hot Encoding，其餘套用手動 mapping 轉換。
       - 透過 VIF 檢查，發現拆成 one hot encoding 的 Foundation 地基材質出現設計矩陣奇異的狀況，造成完美共線性。因此刪除數量最小的欄位，以解決線性模型檢定的問題。
 
-- 針對 樹模型
+- 針對隨機森林、線性模型
     - **清洗**：
-        - A
+        - 明確可以定義有順序的文字內容轉成 Ordinal Encoding
+        - 其餘轉成 One Hot Encoding 
     - **填補**：
-        - B
+        - 找出特殊條件下資料的填補對應的值或是眾數。
+        - Electrical 資料有缺失則填補眾數
+        - 數值型態缺填補中位數
+        - 文字型態缺失填補文字 NA
 
 ## 4. 模型表現 (Model Performance)
 - Baseline (OLS_Linear):
@@ -65,6 +69,15 @@ _(這裡放一張漂亮的 SHAP 或特徵重要性圖表)_
     - rmse : 0.15
     - rmse_gap : 0.19
     - 此模型預測結果上傳 Kaggle OLS 模型與 12項指標的 public Score 為 0.15445，將以此模型為基準線。
+- Baseline (Linear Regression):
+    - r^2 : 0.88
+    - rmse : 29952.60
+    - rmse_gap : 0.36
+- Canditate Model (Random Forest Regression):
+    - r^2 : 0.86
+    - rmse : 32316.75
+    - rmse_gap : 1.85
+    - 已先透過 GridSearchCV 找出該批資料中最適切的參數，仍得出過度擬合的結果，並且測試集的 rmse 遠高於 Linear Regression。顯示本次資料轉碼後的結果，對於隨機森林模型有較大的限制。如為了降低過度擬合，會導致預測模型失準。
 - Final Model (XGBoost): RMSE 0.12 (**提升 33%**)
 
 ##### draft
