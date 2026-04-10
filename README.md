@@ -80,9 +80,3 @@ _(這裡放一張漂亮的 SHAP 或特徵重要性圖表)_
     - 已先透過 GridSearchCV 找出該批資料中最適切的參數，仍得出過度擬合的結果，並且測試集的 rmse 遠高於 Linear Regression。顯示本次資料轉碼後的結果，對於隨機森林模型有較大的限制。如為了降低過度擬合，會導致預測模型失準。
 - Final Model (XGBoost): RMSE 0.12 (**提升 33%**)
 
-##### draft
-特徵工程架構演進 (Feature Engineering Architecture Evolution)
-
-Phase 1: 線性基準模型 (Manual Pipeline)：為確保對資料流與防漏機制 (Data Leakage) 的絕對掌控，在建立 17 個核心特徵的線性模型時，採用自定義函數進行缺失填補與常態化，並嚴格實作分離式的標準化 (StandardScaler)。
-
-Phase 2: 樹模型大軍 (ColumnTransformer)：當特徵擴展至 80 項時，手動清洗將導致代碼冗餘與維護災難。因此，本階段引入 scikit-learn 的 ColumnTransformer 進行自動化分流，展現對現代 MLOps 模組化工具的掌握。
