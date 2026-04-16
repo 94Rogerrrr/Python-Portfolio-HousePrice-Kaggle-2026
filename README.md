@@ -56,7 +56,9 @@ _(這裡放一張漂亮的 SHAP 或特徵重要性圖表)_
 - 針對隨機森林、線性模型
     - **清洗**：
         - 明確可以定義有順序的文字內容轉成 Ordinal Encoding
-        - 其餘轉成 One Hot Encoding 
+        - 指標基數 >=6 的轉成 Target Encoding 
+        - 其餘轉成 One Hot Encode 模式
+        - 刪除原本透過相關係數找出的兩筆 GrLivArea 之離峰值
     - **填補**：
         - 找出特殊條件下資料的填補對應的值或是眾數。
         - Electrical 資料有缺失則填補眾數
