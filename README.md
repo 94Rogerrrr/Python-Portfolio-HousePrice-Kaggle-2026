@@ -3,7 +3,6 @@ It's a repository for Python data analysis portfolio about Kaggle Data - House P
 
 The project is trying to evaluate the house price is underestimated by building a house price predicting model according to the Kaggle Dataset(https://www.kaggle.com/datasets/shashanknecrothapa/ames-housing-dataset)
 
-first problem, there are 80+ columns, how do I be able to check every column has non, mean, or outlayer?
 ## 1. 專案摘要 (Title & Hook)
 - **標題**：House Price Prediction: Advanced Regression Techniques
 - **摘要**：比較傳統 OLS 模型、機器學習之線性模型、數種樹模型與 LassoCV 回歸模型預測房價，成功將誤差 (RMSE) 降低至 0.12，並識別出「廚房品質」與「居住面積」為影響房價的最關鍵因素。
