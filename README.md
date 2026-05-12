@@ -5,10 +5,10 @@ The project is trying to evaluate the house price is underestimated by building 
 
 ## 1. 專案摘要 (Title & Hook)
 - **標題**：House Price Prediction: Advanced Regression Techniques
-- **摘要**：比較傳統 OLS 模型、機器學習之線性模型、數種樹模型與 LassoCV 回歸模型預測房價，成功將誤差 (RMSE) 降低至 0.12，並識別出「居住面積」與「整體品質」為影響房價的最關鍵因素。
+- **摘要**：比較傳統 OLS 模型、機器學習之線性模型、數種樹模型與 LassoCV 回歸模型預測房價，成功將誤差 (Test RMSE) 降低至 0.12355，並透過特徵係數得出「居住面積」與「整體品質」為影響房價的最關鍵因素。
 ## 2. 商業洞察 (Business Insights) 
 ### 相關係數：
-#### 在 OLS 傳統模型的資料檢查中
+#### 在 OLS 傳統模型的資料檢查
 - 房價相關超過 0.5 之指標：OverallQual     0.80/Neighborhood    0.73/GrLivArea       0.71 ...... 詳見代碼。
 - 房價最高相關的欄位為 OverallQual 整體品質，其次為 Neighborhood 所屬社區，再者 GrLivArea 地面上居住面積。
 - 查看負相關的數值，發現最低相關為 KitchenAbvGr -0.135907 然而其欄位在說明手冊上卻沒有定義。依據欄位名稱拆解，應該是屬於地面上廚房的相關內容，但不確定單位為何。
@@ -22,8 +22,12 @@ _(這裡放一張漂亮的 SHAP 或特徵重要性圖表)_
     - Foundation_CBlock   = -0.33
 <br>可知使用 PConc 材質對房價有正相關，而使用其他材質會有負相關。
 #### 在 LassoCV 模型的預測結果
-- 相關係數最高的特徵為 GrLivArea 地面上居住面積，次高者為 OverallQual 整體品質。顯示這兩項指標會高度影響房價。
-- 多種樹模型之預測誤差小但是 RMSE Degradation (Train vs Test) 均明顯大於線性模型，故推論在本次特徵工程下，線性模型表現較佳，可以兼顧最小的均方誤差與過度擬合問題。
+- 多種樹模型之預測誤差小但是 RMSE Degradation (Train vs Test) 均明顯大於線性模型，故推論在本次特徵工程下，線性模型表現較佳，可以兼顧最小的均方誤差與過度擬合問題，又 LassoCV 模型會排除共線性或是無相關的特徵項，適合做相關性解讀，故針對此模型保留之特徵進行分析。
+- 特徵係數最高的特徵為 GrLivArea 地面上居住面積，次高者為 OverallQual 整體品質。顯示這兩項指標會高度影響房價。
+- (放 LassoCV feature best 10 and least 10 圖)挑出其中最高的 10 項與最低的 10 項特徵係數繪製水平直方圖，可知最高 10 項的特徵的影響力大於最低 10 項的負面影響力，顯示本次特徵工程在 LassoCV 的學習下，雖有扣分之特徵但其負面影響不如正面的特徵來得大。
+- 前十名中的文字分類資料 Neighborhood 特徵中，撈出平均最高的區域為 NridgHt （12.619223），次高者為 NoRidge（12.551264）
+- 文字類型指標 SaleCondition 特徵中，最高平均為 Partial (12.464719)，次高者為 Normal (12.003083)
+- 文字類型指標 Functional 特徵為順序尺度，呈正相關，說明分數越高者，對房價影響越大。
 
 
 ## 3. 資料處理 (Data Methodology) 
@@ -71,38 +75,50 @@ _(這裡放一張漂亮的 SHAP 或特徵重要性圖表)_
 
 ## 4. 模型表現 (Model Performance)
 - Baseline (OLS_Linear):
-    - R-squared : 0.89
-    - Train RMSE :
-    - Test RMSE : 0.15
-    - RMSE Degradation (Train vs Test):0.19
+    - R-squared : 0.87 
+    - Train RMSE(Log Scale) : 0.12651
+    - Test RMSE(Log Scale) : 0.15011
+    - RMSE Degradation (Train vs Test): 0.18659
+    - Test RMSE(Original Scale in USD): about 25,000 USD
+    - Test MAE (Original Scale in USD): about 18,400 USD
     - 此模型預測結果上傳 Kaggle， OLS 模型與 12項指標的 public Score 為 0.15445，將以此模型為基準線。
 - Baseline (Linear Regression):
     - R-squared : 0.91
-    - Train RMSE :
-    - Test RMSE :0.12
-    - RMSE Degradation (Train vs Test): 0.15
-- Canditate Model (Random Forest Regression):
+    - Train RMSE(Log Scale) : 0.10715
+    - Test RMSE(Log Scale) : 0.12314
+    - RMSE Degradation (Train vs Test): 0.14929
+    - Test RMSE(Original Scale in USD): about 20,600 USD
+    - Test MAE (Orginal Scale in USD): about 15,000 USD
+- Canditate Model (Random Forest Regression): 
     - R-squared : 0.88
-    - Train RMSE :
-    - Test RMSE : 0.14
-    - RMSE Degradation (Train vs Test): 1.90
-    - 已先透過 GridSearchCV 找出該批資料中最適切的參數，仍得出過度擬合的結果，並且 Test RMSE : 0.14 略高於 Linear Regression。顯示本次特徵工程下，對於隨機森林模型有較大的限制。如為了降低過度擬合，會導致預測模型失準。
+    - Train RMSE(Log Scale) : 0.04986
+    - Test RMSE(Log Scale) : 0.14481
+    - RMSE Degradation (Train vs Test): 1.90438
+    - Test RMSE(Original Scale in USD): about 23,800 USD
+    - Test MAE (Orginal Scale in USD): about 15,900 USD
+    - 已先透過 GridSearchCV 找出該批資料中最適切的參數，仍得出過度擬合的結果 （RMSE Degradation (Train vs Test): 1.90438 ），並且 Test RMSE : 0.14481 略高於 Linear Regression。顯示本次特徵工程下，隨機森林模型表現不如線性模型，故繼續嘗試其他學習模型。
 - Canditate Model (XGBoost Regression):
     - R-squared : 0.90
-    - Train RMSE :
-    - Test RMSE : 0.12
-    - RMSE Degradation (Train vs Test): 3.45
-    - 已先透過早停法、CV k fold 方式，找出該批資料中最適切的參數，名稱為 CVxgbModel。Test RMSE : 0.12 等於 Linear Regression，而 Train RMSE : Test RMSE : 0.12 ，兩者 RMSE Degradation (Train vs Test): 3.45 比沒使用 CV k fold 時低許多(RMSE Degradation (Train vs Test): 10.95 )，預測結果仍是過度擬合。因   Train RMSE 逼近  ？？？ ，為極端過度擬合之狀況，造成有高度的 RMSE Degradation。在本次特徵工程下，XGBoost 表現不如線性模型。
+    - Train RMSE(Log Scale) : 0.02713
+    - Test RMSE(Log Scale) : 0.12086
+    - RMSE Degradation (Train vs Test): 3.45451
+    - Test RMSE(Original Scale in USD): about 25,300 USD
+    - Test MAE (Orginal Scale in USD): about 15,000 USD
+    - 已先透過早停法、CV k fold 方式，找出該批資料中最適切的參數，名稱為 CVxgbModel。Test RMSE : 0.12086 略低於 Linear Regression，而 Train RMSE : 0.02713 與 Test RMSE : 0.12086 ，兩者 RMSE Degradation (Train vs Test): 3.45451 比沒使用 CV-k-fold 時低許多(RMSE Degradation (Train vs Test): 10.89351 )，預測結果仍是過度擬合。因 Train RMSE : 0.02713 ，為極端過度擬合之狀況，造成有高度的 RMSE Degradation。在本次特徵工程下，XGBoost 表現不如線性模型。
 - Canditate Model (LightGBM Regression):
     - R-squared : 0.91
-    - Train RMSE :
-    - Test RMSE : 0.12
-    - RMSE Degradation (Train vs Test): 0.95
-    - 已先透過 GridSearchCV 找出該批資料中最適切的參數，仍得出過度擬合的結果，Test RMSE : 0.12 等於 Linear Regression。在本次特徵工程下，LightGBM 表現不如線性模型。
-- Final Model (LassoCV): RMSE 0.12 (**提升 33%**)
+    - Train RMSE(Log Scale) : 0.06031
+    - Test RMSE(Log Scale) : 0.11779
+    - RMSE Degradation (Train vs Test): 0.95297
+    - Test RMSE(Original Scale in USD): about 25,000 USD
+    - Test MAE (Orginal Scale in USD): about 14,800 USD
+    - 已先透過 GridSearchCV 找出該批資料中最適切的參數，雖 Test RMSE : 0.11779 低於 Linear Regression 的 Test RMSE，然而因 Train RMSE : 0.06031 造成 RMSE Degradation 高於 Linear Regression ，為過度擬合的結果。在本次特徵工程下，LightGBM 表現不如線性模型。
+- Final Model (LassoCV): 
     - R-squared : 0.91
-    - Train RMSE :
-    - Test RMSE: 0.12
-    - RMSE Degradation (Train vs Test): 0.14
-    - 此模型 Test RMSE: 0.12  等於 Linear Regression 不過 RMSE Degradation (Train vs Test): 0.14 略低於 Linear Regression 故選定期為最終勝出模型。
+    - Train RMSE(Log Scale) : 0.10850
+    - Test RMSE(Log Scale): 0.12355
+    - RMSE Degradation (Train vs Test): 0.13871
+    - Test RMSE(Original Scale in USD): about 20,700 USD
+    - Test MAE (Orginal Scale in USD): about 15,100 USD
+    - 此模型 Test RMSE: 0.12355 很逼近 Linear Regression 的 Test RMSE: 0.12314 不過 RMSE Degradation (Train vs Test): 0.13871 略低於 Linear Regression 故選定期為最終勝出模型。
     - 此模型預測結果上傳 Kaggle， LassoCV 的 public Score 為 0.13276，優於 OLS 與 12 項指標的模型結果。
