@@ -12,6 +12,7 @@ The project is trying to evaluate the house price is underestimated by building 
 - 房價相關超過 0.5 之指標：OverallQual     0.80/Neighborhood    0.73/GrLivArea       0.71 ...... 詳見代碼。
 - 房價最高相關的欄位為 OverallQual 整體品質，其次為 Neighborhood 所屬社區，再者 GrLivArea 地面上居住面積。
 - 查看負相關的數值，發現最低相關為 KitchenAbvGr -0.135907 然而其欄位在說明手冊上卻沒有定義。依據欄位名稱拆解，應該是屬於地面上廚房的相關內容，但不確定單位為何。
+
 **相關係數熱力圖解讀**
 _(這裡放一張漂亮的 SHAP 或特徵重要性圖表)_
 - 發現 1 : 文字資料經過較精確的 encode 邏輯，且對房價做常態化後，前三項相關係數有提高。因為資料經過清洗轉換可以呈現更精確的相關影響。
