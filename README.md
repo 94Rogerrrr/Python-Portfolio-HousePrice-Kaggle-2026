@@ -24,11 +24,11 @@ _(這裡放一張漂亮的 SHAP 或特徵重要性圖表)_
 <br>可知使用 PConc 材質對房價有正相關，而使用其他材質會有負相關。
 #### 在 LassoCV 模型的預測結果
 - 多種樹模型之預測誤差 Test RMSE(Log Scale) 小但是 RMSE Degradation (Train vs Test) 與 Test RMSE(Original Scale in USD)  均明顯大於線性模型，故推論在本次特徵工程下，線性模型表現較佳，可以兼顧最小的均方誤差與過度擬合問題，又 LassoCV 模型會排除共線性或是無相關的特徵項，適合做相關性解讀，故針對此模型保留之特徵進行分析。
-- 特徵係數最高的特徵為 GrLivArea 地面上居住面積，次高者為 OverallQual 整體品質。顯示這兩項指標會高度影響房價。
+- 特徵係數最高的特徵為 GrLivArea 地面上居住面積，次高者為 OverallQual 整體品質。顯示這兩項指標會高度與房價正相關。
 - (放 LassoCV feature best 10 and least 10 圖)挑出其中最高的 10 項與最低的 10 項特徵係數繪製水平直方圖，可知最高 10 項的特徵的影響力大於最低 10 項的負面影響力，顯示本次特徵工程在 LassoCV 的學習下，雖有扣分之特徵但其負面影響不如正面的特徵來得大。
-- 前十名中的文字分類資料 Neighborhood 特徵中，撈出平均最高的區域為 NridgHt （12.619223），次高者為 NoRidge（12.551264）
-- 文字類型指標 SaleCondition 特徵中，最高平均為 Partial (12.464719)，次高者為 Normal (12.003083)
-- 文字類型指標 Functional 特徵為順序尺度，呈正相關，說明分數越高者，對房價影響越大。
+- 前十名中的文字分類資料 Neighborhood 特徵中，撈出平均最高的區域為 NridgHt （12.619223），次高者為 NoRidge（12.551264），最高平均的社區跟房價有正相關。
+- 文字類型指標 SaleCondition 特徵中，最高平均為 Partial (12.464719)，次高者為 Normal (12.003083)，最高平均的項目跟房價有正相關。
+- 文字類型指標 Functional 特徵為順序尺度，呈正相關，說明分數越高者，與房價有越高的正相關。
 
 
 ## 3. 資料處理 (Data Methodology) 
