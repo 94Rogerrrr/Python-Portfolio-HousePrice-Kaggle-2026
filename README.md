@@ -5,7 +5,7 @@ The project is trying to evaluate the house price is underestimated by building 
 
 ## 1. 專案摘要 (Title & Hook)
 - **標題**：House Price Prediction: Advanced Regression Techniques
-- **摘要**：比較傳統 OLS 模型、機器學習之線性模型、數種樹模型與 LassoCV 回歸模型預測房價，成功將誤差 (Test RMSE) 降低至 0.12355，並透過特徵係數得出「居住面積」與「整體品質」為影響房價的最關鍵因素。
+- **摘要**：比較傳統 OLS 模型、機器學習之線性模型、數種樹模型與 LassoCV 回歸模型預測房價，成功將誤差 Test RMSE(Log Scale) 降低至 0.12355，並透過特徵係數得出「居住面積」與「整體品質」為影響房價的最關鍵因素。
 ## 2. 商業洞察 (Business Insights) 
 ### 相關係數：
 #### 在 OLS 傳統模型的資料檢查
@@ -22,7 +22,7 @@ _(這裡放一張漂亮的 SHAP 或特徵重要性圖表)_
     - Foundation_CBlock   = -0.33
 <br>可知使用 PConc 材質對房價有正相關，而使用其他材質會有負相關。
 #### 在 LassoCV 模型的預測結果
-- 多種樹模型之預測誤差小但是 RMSE Degradation (Train vs Test) 均明顯大於線性模型，故推論在本次特徵工程下，線性模型表現較佳，可以兼顧最小的均方誤差與過度擬合問題，又 LassoCV 模型會排除共線性或是無相關的特徵項，適合做相關性解讀，故針對此模型保留之特徵進行分析。
+- 多種樹模型之預測誤差 Test RMSE(Log Scale) 小但是 RMSE Degradation (Train vs Test) 與 Test RMSE(Original Scale in USD)  均明顯大於線性模型，故推論在本次特徵工程下，線性模型表現較佳，可以兼顧最小的均方誤差與過度擬合問題，又 LassoCV 模型會排除共線性或是無相關的特徵項，適合做相關性解讀，故針對此模型保留之特徵進行分析。
 - 特徵係數最高的特徵為 GrLivArea 地面上居住面積，次高者為 OverallQual 整體品質。顯示這兩項指標會高度影響房價。
 - (放 LassoCV feature best 10 and least 10 圖)挑出其中最高的 10 項與最低的 10 項特徵係數繪製水平直方圖，可知最高 10 項的特徵的影響力大於最低 10 項的負面影響力，顯示本次特徵工程在 LassoCV 的學習下，雖有扣分之特徵但其負面影響不如正面的特徵來得大。
 - 前十名中的文字分類資料 Neighborhood 特徵中，撈出平均最高的區域為 NridgHt （12.619223），次高者為 NoRidge（12.551264）
@@ -120,5 +120,7 @@ _(這裡放一張漂亮的 SHAP 或特徵重要性圖表)_
     - RMSE Degradation (Train vs Test): 0.13871
     - Test RMSE(Original Scale in USD): about 20,700 USD
     - Test MAE (Orginal Scale in USD): about 15,100 USD
-    - 此模型 Test RMSE: 0.12355 很逼近 Linear Regression 的 Test RMSE: 0.12314 不過 RMSE Degradation (Train vs Test): 0.13871 略低於 Linear Regression 故選定期為最終勝出模型。
+    - 此模型 Test RMSE: 0.12355 很逼近 Linear Regression 的 Test RMSE: 0.12314 不過 RMSE Degradation (Train vs Test): 0.13871 略低於 Linear Regression 。
     - 此模型預測結果上傳 Kaggle， LassoCV 的 public Score 為 0.13276，優於 OLS 與 12 項指標的模型結果。
+- 觀察數種模型之 Test RMSE、Test RMSE (Original Scale in USD)、Test MAE (Original Scale in USD) 三種指標衡量，樹模型的 Test RMSE (Original Scale in USD) 相比線性模型高，而 Test MAE (Original Scale in USD) 優於線性模型，顯示其對於平均值附近房價之預測準確較高，但對於極端值如豪宅之房價預測較失準。
+- 考量專案目的為預測房價之準確，若在高額房價的預測失準造成的差異影響較大，又因其排除共線性與篩除無相關特徵之特性，故選定 LassoCV 為最終勝出模型。
