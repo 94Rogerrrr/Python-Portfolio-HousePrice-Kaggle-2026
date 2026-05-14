@@ -131,4 +131,5 @@ RMSE Gap = Test RMSE(Log Scale) - Train RMSE(Log Scale)
     - 此模型 Test RMSE: 0.12355 很逼近 Linear Regression 的 Test RMSE: 0.12314 不過 RMSE Degradation (Train vs Test)(%): 13.87% 略低於 Linear Regression 。
     - 此模型預測結果上傳 Kaggle， LassoCV 的 public Score 為 0.13276，優於 OLS 與 12 項指標的模型結果。
 - 觀察數種模型之 Test RMSE、Test RMSE (Original Scale in USD)、Test MAE (Original Scale in USD) 三種指標衡量，樹模型的 Test RMSE (Original Scale in USD) 相比線性模型高，而 Test MAE (Original Scale in USD) 優於線性模型，顯示其對於平均值附近房價之預測準確較高，但對於極端值如豪宅之房價預測較失準。
+- 綜合樹模型表現，應進行調整參數以進一步改善模型，然考量專案時間成本與效益，採用基礎的模型已得出較優的結果，故在此專案中選擇線性模型。
 - 考量專案目的為預測房價之準確，若在高額房價的預測失準造成的差異影響較大，又因其排除共線性與篩除無相關特徵之特性，故選定 LassoCV 為最終勝出模型。
