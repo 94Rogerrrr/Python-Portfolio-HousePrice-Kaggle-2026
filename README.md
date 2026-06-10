@@ -1,31 +1,33 @@
 # Python-Portfolio-HousePrice_Kaggle_20260305
 It's a repository for Python data analysis portfolio about Kaggle Data - House Price Prediction. Here are .ipynb, requirement.txt, README.md in this repository.
 
-The project is trying to evaluate the house price is underestimated by building a house price predicting model according to the Kaggle Dataset(https://www.kaggle.com/datasets/shashanknecrothapa/ames-housing-dataset)
+The project aims to identify undervalued properties by building a predictive pricing model based on the Kaggle Dataset(https://www.kaggle.com/datasets/shashanknecrothapa/ames-housing-dataset)
 
 ## 1. 專案摘要 (Title & Hook)
-- **標題**：House Price Prediction: Advanced Regression Techniques
-- **摘要**：比較傳統 OLS 模型、機器學習之線性模型、數種樹模型與 LassoCV 回歸模型預測房價，成功將誤差 Test RMSE(Log Scale) 降低至 0.12355，並透過特徵係數得出「居住面積」與「整體品質」為影響房價的最關鍵因素。
+- **標題**：House Price Prediction: Evaluate the house price is underestimated.
+- **摘要**：本專案橫跨傳統線性回歸家族（OLS, Linear and LassoCV) 及數種樹模型 (Random Forest, XGBoost 及 LightGBM)預測房價，成功將誤差 Test RMSE(Log Scale) 降低至 0.12355，並透過特徵係數得出「居住面積」與「整體品質」為影響房價的最關鍵因素。
 ## 2. 商業洞察 (Business Insights) 
+### 初步洞察：
+模型訓練前，資料處理過程中的發現：
 #### 相關係數：
-- 將文字型態資料透過 Target Encoder 轉成數字後，根據房價呈現高相關係數前三者：最高者為 OverallQual( 0.80)，次高者為 Neighborhood(0.73)，第三名為 GrLivArea(0.71) 
-- 查看負相關的數值，發現最低相關為 KitchenAbvGr -0.135907 然而其欄位在說明手冊上卻沒有定義。依據欄位名稱拆解，應該是屬於地面上廚房的相關內容，但不確定單位為何。
+- 查看負相關的數值，發現最低相關為 KitchenAbvGr -0.135907 然而其欄位在說明手冊上卻沒有定義。依據欄位名稱應屬於地面上廚房的相關內容。
 
 **相關係數熱力圖解讀**
 _(這裡放一張漂亮的 SHAP 或特徵重要性圖表)_
-- 發現 1 : 文字資料經過較精確的 encode 邏輯，且對房價做常態化後，前三項相關係數有提高。因為資料經過清洗轉換可以呈現更精確的相關影響。
-- 發現 2 : OverallQual 整體品質、Neighborhood 所處的社 區與 GrLivArea 坪數，與第一次跑相關係數結果相同，均與房價有高度相關。
-- 發現 3 : 當地基材質 Foundation 以 One Hot Encoding 處理成不同欄位，其相關係數差異也被凸顯。
+- 發現 1 : 文字資料經過較精確的 encode 邏輯，且對房價做常態化後，前三項如下，顯示均與房價有高度相關。
+    - 最高者為 OverallQual( 0.80)
+    - 次高者為 Neighborhood(0.73)
+    - 第三名為 GrLivArea(0.71)
+- 發現 2 : 當地基材質 Foundation 以 One Hot Encoding 處理成不同欄位，其相關係數差異也被凸顯。
     - Foundation_PConc   = 0.53
     - Foundation_infrequent_sklearn  = - 0.30
     - Foundation_CBlock   = -0.33
 <br>可知使用 PConc 材質對房價有正相關，而使用其他材質會有負相關。
 
-#### 在 OLS 傳統模型的預測結果
-- 透過傳統 statismodel 的 OLS 模型，挑出顯著性 p< 0.05 的 12 項指標，這些指標與房價具有顯著正相關。
+### 模型結果分析：
+本專案執行了數種模型，以 OLS 模型為基準，其他模型與之相較。選取房價誤差小以及過度擬合程度低者。多種樹模型之預測誤差 Test RMSE(Log Scale) 小但是 RMSE Degradation (Train vs Test) 與 Test RMSE(Original Scale in USD)  均明顯大於線性模型，故推論在本次特徵工程下，線性模型表現較佳，可以兼顧最小的均方誤差與過度擬合問題，又 LassoCV 模型會排除共線性或是無相關的特徵項，適合做相關性解讀，故針對此模型保留之特徵進行分析。
 
 #### 在 LassoCV 模型的預測結果
-- 多種樹模型之預測誤差 Test RMSE(Log Scale) 小但是 RMSE Degradation (Train vs Test) 與 Test RMSE(Original Scale in USD)  均明顯大於線性模型，故推論在本次特徵工程下，線性模型表現較佳，可以兼顧最小的均方誤差與過度擬合問題，又 LassoCV 模型會排除共線性或是無相關的特徵項，適合做相關性解讀，故針對此模型保留之特徵進行分析。
 - 特徵係數最高的特徵為 GrLivArea 地面上居住面積，次高者為 OverallQual 整體品質。顯示這兩項指標會高度與房價正相關。
 - (放 LassoCV feature best 10 and least 10 圖)挑出其中最高的 10 項與最低的 10 項特徵係數繪製水平直方圖，可知最高 10 項的特徵的影響力大於最低 10 項的負面影響力，顯示本次特徵工程在 LassoCV 的學習下，雖有扣分之特徵但其負面影響不如正面的特徵來得大。
 - GrLivArea 地面上居住面積，特徵係數為 0.12187，標準差大約 504，顯示若地上居住面積提高 500 坪，可以讓房價增加 12.9607%。若某地區平均房價為 20 萬美元，則提升 GrLivArea 地面上居住面積提高 500 坪，可以增加大約 25,921 美元
