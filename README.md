@@ -25,7 +25,8 @@ _(這裡放一張漂亮的 SHAP 或特徵重要性圖表)_
 <br>可知使用 PConc 材質對房價有正相關，而使用其他材質會有負相關。
 
 ### 模型結果分析：
-本專案執行了數種模型，以 OLS 模型為基準，其他模型與之相較。選取房價誤差小以及過度擬合程度低者。多種樹模型之預測誤差 Test RMSE(Log Scale) 小但是 RMSE Degradation (Train vs Test) 與 Test RMSE(Original Scale in USD)  均明顯大於線性模型，故推論在本次特徵工程下，線性模型表現較佳，可以兼顧最小的均方誤差與過度擬合問題，又 LassoCV 模型會排除共線性或是無相關的特徵項，適合做相關性解讀，故針對此模型保留之特徵進行分析。
+本專案執行了數種模型，以 OLS 模型為基準，其他模型與之相較，選取房價誤差小以及過度擬合程度低者。<br>
+多種樹模型之預測誤差 Test RMSE(Log Scale) 小但是 RMSE Degradation (Train vs Test) 與 Test RMSE(Original Scale in USD)  均明顯大於線性模型，故推論在本次特徵工程下，線性模型表現較佳，可以兼顧最小的均方誤差與過度擬合問題，又 LassoCV 模型會排除共線性或是無相關的特徵項，適合做相關性解讀，故針對此模型保留之特徵進行分析。
 
 #### 在 LassoCV 模型的預測結果
 (放 LassoCV feature best 10 and least 10 圖)
@@ -92,8 +93,11 @@ markdown
 
 ## 4. 模型表現 (Model Performance)
 羅列專案中執行模型學習成果，提供衡量標準與綜合考量。 <br>
-RMSE Degradation (Train vs Test)(%) = (Test RMSE(Log Scale) -Train RMSE(Log Scale) ) / Train RMSE(Log Scale)， 用以衡量模型對未見資料的衰退程度
-RMSE Gap = Test RMSE(Log Scale) - Train RMSE(Log Scale)
+衡量標準之公式：
+*  RMSE Degradation (Train vs Test)(%) = (Test RMSE(Log Scale) -Train RMSE(Log Scale) ) / Train RMSE(Log Scale)， 用以衡量模型對未見資料的衰退程度
+*  RMSE Gap = Test RMSE(Log Scale) - Train RMSE(Log Scale)
+
+**各模型衡量指標** 
 - Baseline (OLS_Linear):
     - R-squared : 0.87 
     - Train RMSE(Log Scale) : 0.12651
@@ -149,5 +153,5 @@ RMSE Gap = Test RMSE(Log Scale) - Train RMSE(Log Scale)
     - 此模型 Test RMSE: 0.12355 很逼近 Linear Regression 的 Test RMSE: 0.12314 不過 RMSE Degradation (Train vs Test)(%): 13.87% 略低於 Linear Regression 。
     - 此模型預測結果上傳 Kaggle， LassoCV 的 public Score 為 0.13276，優於 OLS＿12 項指標的模型結果。
 - 觀察數種模型之 Test RMSE、Test RMSE (Original Scale in USD)、Test MAE (Original Scale in USD) 三種指標衡量，樹模型的 Test RMSE (Original Scale in USD) 相比線性模型高，而 Test MAE (Original Scale in USD) 優於線性模型，顯示其對於平均值附近房價之預測準確較高，但對於極端值如豪宅之房價預測較失準。
-- 綜合樹模型表現，應進行調整參數以進一步改善模型，然考量專案時間成本與效益，採用基礎的模型已得出較優的結果，故在此專案中選擇線性模型。
-- 專案目的為預測房價之準確，高額房價的預測失準造成的差異影響較大者須汰除，又因 LassoCV 排除共線性與篩除無相關特徵之特性，故選定 LassoCV 為最終勝出模型。
+- 縱觀樹模型表現，應進行調整參數以進一步改善模型，然考量專案時間成本與效益，採用基礎模型已得出較優結果，故在此專案中選擇線性模型。
+- 專案目的為準確預測房價，高額房價的預測失準造成的差異影響較大者須汰除，又因 LassoCV 排除共線性與篩除無相關特徵之特性，故選定 LassoCV 為最終勝出模型。
