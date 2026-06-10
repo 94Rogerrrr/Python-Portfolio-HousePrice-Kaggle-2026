@@ -91,7 +91,7 @@ markdown
         - 文字型態缺失，但本身手冊並無定義 NA 者，補上眾數
 
 ## 4. 模型表現 (Model Performance)
-羅列專案中執行模型學習成果，提供衡量標準與綜合考量。
+羅列專案中執行模型學習成果，提供衡量標準與綜合考量。 <br>
 RMSE Degradation (Train vs Test)(%) = (Test RMSE(Log Scale) -Train RMSE(Log Scale) ) / Train RMSE(Log Scale)， 用以衡量模型對未見資料的衰退程度
 RMSE Gap = Test RMSE(Log Scale) - Train RMSE(Log Scale)
 - Baseline (OLS_Linear):
