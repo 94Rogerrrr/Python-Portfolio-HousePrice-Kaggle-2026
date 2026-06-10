@@ -4,8 +4,8 @@ It's a repository for Python data analysis portfolio about Kaggle Data - House P
 The project aims to identify undervalued properties by building a predictive pricing model based on the Kaggle Dataset(https://www.kaggle.com/datasets/shashanknecrothapa/ames-housing-dataset)
 
 ## 1. 專案摘要 (Title & Hook)
-- **標題**：House Price Prediction: Evaluate the house price is underestimated.
-- **摘要**：本專案橫跨傳統線性回歸家族（OLS, Linear and LassoCV) 及數種樹模型 (Random Forest, XGBoost 及 LightGBM)預測房價，成功將誤差 Test RMSE(Log Scale) 降低至 0.12355，並透過特徵係數得出「居住面積」與「整體品質」為影響房價的最關鍵因素。
+- **標題**：House Price Prediction: Evaluate whether the house price is underestimated.
+- **摘要**：本專案橫跨傳統線性回歸家族（OLS, Linear and LassoCV) 及樹模型家族 (Random Forest, XGBoost 及 LightGBM) 預測房價，成功將誤差 Test RMSE(Log Scale) 降低至 0.12355，並透過特徵係數得出「居住面積」與「整體品質」為影響房價的最關鍵因素。
 ## 2. 商業洞察 (Business Insights) 
 ### 初步洞察：
 模型訓練前，資料處理過程中的發現：
@@ -91,6 +91,7 @@ markdown
         - 文字型態缺失，但本身手冊並無定義 NA 者，補上眾數
 
 ## 4. 模型表現 (Model Performance)
+羅列專案中執行模型學習成果，提供衡量標準與綜合考量。
 RMSE Degradation (Train vs Test)(%) = (Test RMSE(Log Scale) -Train RMSE(Log Scale) ) / Train RMSE(Log Scale)， 用以衡量模型對未見資料的衰退程度
 RMSE Gap = Test RMSE(Log Scale) - Train RMSE(Log Scale)
 - Baseline (OLS_Linear):
