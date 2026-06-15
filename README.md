@@ -5,7 +5,7 @@ The project aims to identify undervalued properties by building a predictive pri
 
 ## 1. 專案摘要 (Title & Hook)
 - **標題**：House Price Prediction: Evaluate whether the house price is underestimated.
-- **摘要**：本專案橫跨傳統線性回歸家族（OLS, Linear and LassoCV) 及樹模型家族 (Random Forest, XGBoost 及 LightGBM) 預測房價，成功將誤差 Test RMSE(Log Scale) 降低至 0.12355，並透過特徵係數得出「居住面積」與「整體品質」為影響房價的最關鍵因素。
+- **摘要**：本專案橫跨傳統線性迴歸家族（OLS, Linear and LassoCV) 及樹模型家族 (Random Forest, XGBoost 及 LightGBM) 預測房價，成功將誤差 Test RMSE(Log Scale) 降低至 0.12355，並透過特徵係數得出「居住面積」與「整體品質」為影響房價的最關鍵因素。
 ## 2. 商業洞察 (Business Insights) 
 ### 初步洞察：
 模型訓練前，資料處理過程中的發現：
@@ -32,6 +32,13 @@ _(這裡放一張漂亮的 SHAP 或特徵重要性圖表)_
 (放 LassoCV feature best 10 and least 10 圖)
 - 挑出其中最高的 10 項與最低的 10 項特徵係數繪製水平直方圖。最高 10 項的特徵的影響力大於最低 10 項的負面影響力，顯示本次特徵工程在 LassoCV 的學習下，雖有扣分之特徵但其負面影響不如正面的特徵影響大。
 - 特徵係數最高者為 GrLivArea 地面上居住面積，次高者為 OverallQual 整體品質，顯示這兩項指標會高度與房價正相關。
+- 特徵係數之觀察：
+
+  |    |     |     |     |     |
+  |----|----|-----|-----|-------|
+  |    |     |     |     |     |
+  |    |     |     |     |     |
+   
 - GrLivArea 地面上居住面積，特徵係數為 0.12187，標準差大約 504，顯示若地上居住面積提高 500 坪，可以讓房價增加 12.9607%。例如；若某地區平均房價為 20 萬美元，則提升 GrLivArea 地面上居住面積提高 500 坪，可以增加大約 25,921 美元
 - OverallQual 整體品質，其溢價百分比為 5.3327% ，若整體品質提升一個層級，則房價可以提升 5.3327% 。例如；若某地區平均房價為 20 萬美元，則提升 OverallQual 整體品質的層級，可以增加大約 10,665 美元
 - OverallCond 整體屋況，其溢價百分比為 3.6019% ，若整體屋況提升一個層級，則房價可以提升 3.6019% 。例如；若某地區平均房價為 20 萬美元，則提升 OverallCond 整體屋況，可以增加大約 7,203 美元
@@ -49,21 +56,20 @@ markdown
 - #### 針對 OLS 線性模型
   - **離群值篩選解讀**：
   - 箱型圖解讀
-    - 從第一行的 SalePrice, GrLivArea 及中間三張圖，GarageArea、 TotalBsmtSF、1stFlrSF 的圖片與離群值的位置，可判斷這些欄位之資料並非常態分佈，明顯有右偏分布的傾向。
+    - 從 SalePrice、GrLivArea、GarageArea、 TotalBsmtSF、1stFlrSF 等圖片與界外值的位置，可判斷這些欄位之資料並非常態分佈，明顯有右偏分布的傾向。
     - 實際上是否為右偏分布的狀態，應依據 skew 數值結果
 
   - 散佈圖解讀
-    - 離群值判讀：遠離聚集或是遠離趨勢的點。
-    - 從第一行中間的 GrLivArea 及中間三張圖，GarageArea、 TotalBsmtSF、1stFlrSF 的圖片，離散與密集程度，可判斷這些欄位之資料具有明顯的離群值。
+    - 從 GrLivArea、GarageArea、 TotalBsmtSF、1stFlrSF 等圖片，離散與密集程度，判斷這些欄位具有不合理的離群值。
 
   - 離群值    
-    - 綜合散佈圖資訊與查詢結果，發現 GrLivArea 的兩筆離群值，也正好是其他欄位的離群值項目。故優先刪減這兩筆資料。
+    - 綜合散佈圖資訊與查詢結果，有明顯遠離聚集或是遠離趨勢的點，發現 GrLivArea 的兩筆離群值，也正好是其他欄位的離群值項目。故優先刪減這兩筆資料。
     - GrLivArea 的相關係數高，若有極端值易影響模型預測結果。
-    - 其他項目之影響不如 GrLivArea 來得高，且撇除以刪除之離群值後，故剩下資料予以保留。
+    - 其他項目之影響不如 GrLivArea 來得高，故剩下資料予以保留。
 
   - **清洗**：
       - 若對所有特徵的離群值都進行整筆資料刪除，恐導致資料枯竭，故針對高相關係數之特徵篩除離群值，以免其極端值嚴重影響模型學習
-      - 針對 GrLivArea 特徵，移除了 2 筆極端異常值。
+      - 針對 GrLivArea 特徵，移除了 2 筆異常值。
       - 次要相關係數之離群值，予以保留。考量如下：
           - 保留該觀測值，可使模型能學習到該筆資料於其他正常特徵上的資訊
           - 最高的離群值亦隨 GrLivArea 的資料一起刪除
@@ -98,6 +104,10 @@ markdown
 *  RMSE Gap = Test RMSE(Log Scale) - Train RMSE(Log Scale)
 
 **各模型衡量指標** 
+
+|   |    |   |   |
+|---|----|---|---|
+|   |     |   |   |
 - Baseline (OLS_Linear):
     - R-squared : 0.87 
     - Train RMSE(Log Scale) : 0.12651
@@ -132,7 +142,7 @@ markdown
     - RMSE Degradation (Train vs Test)(%): 345.45%
     - Test RMSE(Original Scale in USD): about 25,300 USD
     - Test MAE (Orginal Scale in USD): about 15,000 USD
-    - 已先透過早停法、CV k fold 方式，找出該批資料中最適切的參數，名稱為 CVxgbModel。Test RMSE : 0.12086 略低於 Linear Regression，而 Train RMSE : 0.02713 與 Test RMSE : 0.12086 ，兩者 RMSE Degradation (Train vs Test)(%): 345.45% 比沒使用 CV-k-fold 時低許多(RMSE Degradation (Train vs Test)(%): 1,089.35% )，預測結果仍是過度擬合。因 Train RMSE : 0.02713 ，為極端過度擬合之狀況，造成有高度的 RMSE Degradation。在本次特徵工程下，XGBoost 表現不如線性模型。
+    - 已先透過早停法、CV k fold 方式，找出該批資料中最適切的參數，名稱為 CVxgbModel。Test RMSE : 0.12086 略低於 Linear Regression，而 Train RMSE : 0.02713 與 Test RMSE : 0.12086 ，兩者 RMSE Degradation (Train vs Test)(%): 345.45% 預測結果仍是過度擬合。因 Train RMSE : 0.02713 ，為極端過度擬合之狀況，造成有高度的 RMSE Degradation。在本次特徵工程下，XGBoost 表現不如線性模型。
 - Canditate Model (LightGBM Regression):
     - R-squared : 0.91
     - Train RMSE(Log Scale) : 0.06031
