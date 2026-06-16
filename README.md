@@ -105,63 +105,24 @@ markdown
 
 **各模型衡量指標** 
 
-|   |    |   |   |
-|---|----|---|---|
-|   |     |   |   |
-- Baseline (OLS_Linear):
-    - R-squared : 0.87 
-    - Train RMSE(Log Scale) : 0.12651
-    - Test RMSE(Log Scale) : 0.15011
-    - RMSE Gap: 0.0236
-    - RMSE Degradation (Train vs Test)(%): 18.65%
-    - Test RMSE(Original Scale in USD): about 25,000 USD
-    - Test MAE (Original Scale in USD): about 18,400 USD
-    - 此模型預測結果上傳 Kaggle， OLS 模型與 12項指標的 Public Score 為 0.15445，將以此模型為基準線。
-- Canditate Model (Linear Regression):
-    - R-squared : 0.91
-    - Train RMSE(Log Scale) : 0.10715
-    - Test RMSE(Log Scale) : 0.12314
-    - RMSE Gap: 0.01599
-    - RMSE Degradation (Train vs Test)(%): 14.92%
-    - Test RMSE(Original Scale in USD): about 20,600 USD
-    - Test MAE (Orginal Scale in USD): about 15,000 USD
-- Canditate Model (Random Forest Regression): 
-    - R-squared : 0.88
-    - Train RMSE(Log Scale) : 0.04986
-    - Test RMSE(Log Scale) : 0.14481
-    - RMSE Gap: 0.09495
-    - RMSE Degradation (Train vs Test)(%): 190.43%
-    - Test RMSE(Original Scale in USD): about 23,800 USD
-    - Test MAE (Orginal Scale in USD): about 15,900 USD
-    - 已先透過 GridSearchCV 找出該批資料中最適切的參數，仍得出過度擬合的結果 （RMSE Degradation (Train vs Test)(%): 190.43% ），並且 Test RMSE : 0.14481 略高於 Linear Regression。顯示本次特徵工程下，隨機森林模型表現不如線性模型，故繼續嘗試其他學習模型。
-- Canditate Model (XGBoost Regression):
-    - R-squared : 0.90
-    - Train RMSE(Log Scale) : 0.02713
-    - Test RMSE(Log Scale) : 0.12086
-    - RMSE Gap: 0.09373
-    - RMSE Degradation (Train vs Test)(%): 345.45%
-    - Test RMSE(Original Scale in USD): about 25,300 USD
-    - Test MAE (Orginal Scale in USD): about 15,000 USD
-    - 已先透過早停法、CV k fold 方式，找出該批資料中最適切的參數，名稱為 CVxgbModel。Test RMSE : 0.12086 略低於 Linear Regression，而 Train RMSE : 0.02713 與 Test RMSE : 0.12086 ，兩者 RMSE Degradation (Train vs Test)(%): 345.45% 預測結果仍是過度擬合。因 Train RMSE : 0.02713 ，為極端過度擬合之狀況，造成有高度的 RMSE Degradation。在本次特徵工程下，XGBoost 表現不如線性模型。
-- Canditate Model (LightGBM Regression):
-    - R-squared : 0.91
-    - Train RMSE(Log Scale) : 0.06031
-    - Test RMSE(Log Scale) : 0.11779
-    - RMSE Gap: 0.05748
-    - RMSE Degradation (Train vs Test)(%): 95.29%
-    - Test RMSE(Original Scale in USD): about 25,000 USD
-    - Test MAE (Orginal Scale in USD): about 14,800 USD
-    - 已先透過 GridSearchCV 找出該批資料中最適切的參數，雖 Test RMSE : 0.11779 低於 Linear Regression 的 Test RMSE，然而因 Train RMSE : 0.06031 造成 RMSE Degradation (Train vs Test)(%): 95.29% 高於 Linear Regression，為過度擬合的結果。在本次特徵工程下，LightGBM 表現不如線性模型。
-- Final Model (LassoCV): 
-    - R-squared : 0.91
-    - Train RMSE(Log Scale) : 0.10850
-    - Test RMSE(Log Scale): 0.12355
-    - RMSE Gap: 0.01505
-    - RMSE Degradation (Train vs Test)(%): 13.87%
-    - Test RMSE(Original Scale in USD): about 20,700 USD
-    - Test MAE (Orginal Scale in USD): about 15,100 USD
-    - 此模型 Test RMSE: 0.12355 很逼近 Linear Regression 的 Test RMSE: 0.12314 不過 RMSE Degradation (Train vs Test)(%): 13.87% 略低於 Linear Regression 。
-    - 此模型預測結果上傳 Kaggle， LassoCV 的 public Score 為 0.13276，優於 OLS＿12 項指標的模型結果。
-- 觀察數種模型之 Test RMSE、Test RMSE (Original Scale in USD)、Test MAE (Original Scale in USD) 三種指標衡量，樹模型的 Test RMSE (Original Scale in USD) 相比線性模型高，而 Test MAE (Original Scale in USD) 優於線性模型，顯示其對於平均值附近房價之預測準確較高，但對於極端值如豪宅之房價預測較失準。
+|Metrics|R-squared|Train RMSE(Log)|Test RMSE(Log)| RMSE Gap|RMSE Degradation (Train vs Test)(%)|Test RMSE($)|Test MAE($)|verdict|
+|---|----|---|---|---|----|---|---|---|
+|OLS_Linear| 0.87|0.12651|0.15011|0.0236|18.65%|25.0k |18.4k | ❌ 基準點  |
+|Linear Regression|0.91|0.10715|0.12314|0.01599|14.92%|20.6k|15.0k| 🟢 略勝  |
+|Random Forest Regression|0.88|0.04986|0.14481|0.09495|190.43%|23.8k|15.9k|❌ 過擬合|
+|XGBoost Regression|0.90|0.02713|0.12086|0.09373|345.45%|25.3k|15.0k|❌ 過擬合 |
+|LightGBM Regression|0.91|0.06031|0.11779|0.05748|95.29%| 25.0k|14.8k|❌ 過擬合|
+|LassoCV|0.91|0.0.10850|0.12355| 0.01505|13.87%|20.7k|15.1k|🏆 **勝出**|
+
+- Random Forest Regression 已先透過 GridSearchCV 找出該批資料中最適切的參數，仍得出過度擬合的結果 （RMSE Degradation (Train vs Test)(%): 190.43% ），並且 Test RMSE : 0.14481 略高於 Linear Regression。在本次特徵工程下，需繼續調整參數才能取得更好的結果，當前參數下 Random Forest 表現不如線性模型。
+- XGBoost Regression 已先透過早停法、CV k fold 方式，找出該批資料中最適切的參數，名稱為 CVxgbModel。Test RMSE : 0.12086 略低於 Linear Regression，而 Train RMSE : 0.02713 與 Test RMSE : 0.12086 ，兩者 RMSE Degradation (Train vs Test)(%): 345.45% 預測結果仍是過度擬合。因 Train RMSE : 0.02713 ，為極端過度擬合之狀況，造成有高度的 RMSE Degradation。在本次特徵工程下，需繼續調整參數才能取得更好的結果，當前參數下 XGBoost 表現不如線性模型。
+- LightGBM Regression 已先透過 GridSearchCV 找出該批資料中最適切的參數，雖 Test RMSE : 0.11779 低於 Linear Regression 的 Test RMSE，然而因 Train RMSE : 0.06031 造成 RMSE Degradation (Train vs Test)(%): 95.29% 高於 Linear Regression，為過度擬合的結果。在本次特徵工程下，需繼續調整參數才能取得更好的結果，當前參數下 LightGBM 表現不如線性模型。
 - 縱觀樹模型表現，應進行調整參數以進一步改善模型，然考量專案時間成本與效益，採用基礎模型已得出較優結果，故在此專案中選擇線性模型。
+- 觀察數種模型之 Test RMSE、Test RMSE (\$)、Test MAE(\$) 三種指標衡量，樹模型的 Test RMSE ($) 相比線性模型高，而 Test MAE ($) 優於線性模型，顯示其對於平均值附近房價之預測準確較高，但對於極端值如豪宅之房價預測較失準。
 - 專案目的為準確預測房價，高額房價的預測失準造成的差異影響較大者須汰除，又因 LassoCV 排除共線性與篩除無相關特徵之特性，故選定 LassoCV 為最終勝出模型。
+上傳 Kaggle 之比較
+
+|     |Public Score| 
+|------|----------|
+|OLS_Linear|0.15445|
+|LassoCV|0.13276|
