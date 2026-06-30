@@ -9,20 +9,21 @@ The project aims to identify undervalued properties by building a predictive pri
 ## 2. 商業洞察 (Business Insights) 
 ### 初步洞察：
 模型訓練前，資料處理過程中的發現：
-#### 相關係數：
-- 查看負相關的數值，發現最低相關為 KitchenAbvGr -0.135907 然而其欄位在說明手冊上卻沒有定義。依據欄位名稱應屬於地面上廚房的相關內容。
+  #### 相關係數：
+  - 查看負相關的數值，發現最低相關為 KitchenAbvGr -0.135907 然而其欄位在說明手冊上卻沒有定義。依據欄位名稱應屬於地面上廚房的相關內容。
 
-**相關係數熱力圖解讀**
-_(這裡放一張漂亮的 SHAP 或特徵重要性圖表)_
-- 發現 1 : 文字資料經過較精確的 Encode 邏輯，且對房價做常態化後，前三項如下，顯示均與房價有高度相關。
+  **相關係數熱力圖解讀**
+
+  _(這裡放一張漂亮的 SHAP 或特徵重要性圖表)_
+  - 發現 1 : 文字資料經過較精確的 Encode 邏輯，且對房價做常態化後，前三項如下，顯示均與房價有高度相關。
     - 最高者為 OverallQual( 0.80)
     - 次高者為 Neighborhood(0.73)
     - 第三名為 GrLivArea(0.71)
-- 發現 2 : 當地基材質 Foundation 以 One Hot Encoding 處理成不同欄位，其相關係數差異也被凸顯。
+  - 發現 2 : 當地基材質 Foundation 以 One Hot Encoding 處理成不同欄位，其相關係數差異也被凸顯。
     - Foundation_PConc   = 0.53
     - Foundation_infrequent_sklearn  = - 0.30
     - Foundation_CBlock   = -0.33
-<br>可知使用 PConc 材質對房價有正相關，而使用其他材質會有負相關。
+  <br>可知使用 PConc 材質對房價有正相關，而使用其他材質會有負相關。
 
 ### 模型結果分析：
 本專案執行了數種模型，以 OLS 模型為基準，其他模型與之相較，選取房價誤差小以及過度擬合程度低者。<br>
@@ -30,16 +31,17 @@ _(這裡放一張漂亮的 SHAP 或特徵重要性圖表)_
 
 #### 在 LassoCV 模型的預測結果
 (放 LassoCV feature best 10 and least 10 圖)
-- 挑出其中最高的 10 項與最低的 10 項特徵係數繪製水平直方圖。最高 10 項的特徵的影響力大於最低 10 項的負面影響力，顯示本次特徵工程在 LassoCV 的學習下，雖有扣分之特徵但其負面影響不如正面的特徵影響大。
+- 挑選最高與最低的 10 項特徵係數繪製水平直方圖。最高 10 項的特徵的影響力大於最低 10 項的負面影響力，顯示本次特徵工程在 LassoCV 的學習下，雖有扣分之特徵但其負面影響不如正面的特徵影響大。
 - 特徵係數最高者為 GrLivArea 地面上居住面積，次高者為 OverallQual 整體品質，顯示這兩項指標會高度與房價正相關。
-- 特徵係數之觀察：
+    ##### 特徵係數之商業價值轉換
 
   |Metrics|Correlations|premium(%)|     Explanation    |
   |----|----|-----|-----|
   |GrLivArea |0.12187|12.9607%|標準差大約 504，若某地區平均房價為 20 萬美元，則提升 GrLivArea 地面上居住面積提高 500 坪，可以增加大約 25,921 美元|     
   |OverallQual|     |     |     |     
-   
-- GrLivArea 地面上居住面積，特徵係數為 0.12187，標準差大約 504，顯示若地上居住面積提高 500 坪，可以讓房價增加 12.9607%。例如；若某地區平均房價為 20 萬美元，則提升 GrLivArea 地面上居住面積提高 500 坪，可以增加大約 25,921 美元
+
+    ##### 考量 ROI 之商業建議
+- GrLivArea 地面上居住面積，特徵係數為 0.12187，標準差大約 504，顯示若地上居住面積提高 500 平方英尺 (Sq.Ft.)，可以讓房價增加 12.9607%。例如；若某地區平均房價為 20 萬美元，則提升 GrLivArea 地面上居住面積提高 500 平方英尺，可以增加大約 25,921 美元
 - OverallQual 整體品質，其溢價百分比為 5.3327% ，若整體品質提升一個層級，則房價可以提升 5.3327% 。例如；若某地區平均房價為 20 萬美元，則提升 OverallQual 整體品質的層級，可以增加大約 10,665 美元
 - OverallCond 整體屋況，其溢價百分比為 3.6019% ，若整體屋況提升一個層級，則房價可以提升 3.6019% 。例如；若某地區平均房價為 20 萬美元，則提升 OverallCond 整體屋況，可以增加大約 7,203 美元
 -  Neighborhood 特徵中，撈出平均最高的區域為 NridgHt （12.619223），次高者為 NoRidge（12.551264），最高平均的社區跟房價有正相關。
@@ -47,6 +49,7 @@ _(這裡放一張漂亮的 SHAP 或特徵重要性圖表)_
 -  Functional 特徵呈正相關，其溢價百分比：2.9698%，顯示提升一個階級預估可提高 2.9698% 的房價。例如；若某地區平均房價為 20 萬美元，則提升 Functional 的等級，可以增加大約 5,939 美元
 - TotalBsmtSF 地下室面積，特徵係數為 0.03027 ，標準差大約 414，顯示若地上居住面積提高 414 坪，可以讓房價增加 3.0735% 。例如；若某地區平均房價為 20 萬美元，則提升 TotalBsmtSF 地下室面積提高 414 坪，可以增加大約 6,147 美元
 - BsmtFinSF1 第一型地下是完成度面積，特徵係數為 0.02779，標準差大約 432，顯示若地上居住面積提高 432 坪，可以讓房價增加 2.8176%。若某地區平均房價為 20 萬美元，則提升BsmtFinSF1 第一型地下是完成度面積提高 432 坪，可以增加大約 5,635 美元
+- BsmtFullBath 為地下室完成的衛浴間數，其溢價百分比為：3.4500% ，若多完成一間衛浴，則房價可以提升 3.45%。例如：若某地區平均房價為 20 萬美元，則提升一間BsmtFullBath 的間數，可以增加大約 6,900 美元
  
 markdown
 
@@ -105,25 +108,28 @@ markdown
 
 **各模型衡量指標** 
 
-|Regressions|R-squared|Train RMSE(Log)|Test RMSE(Log)| RMSE Gap|RMSE Degradation (Train vs Test)(%)|Test RMSE($)|Test MAE($)|verdict|
-|---|----|---|---|---|----|---|---|---|
-|OLS_Linear| 0.87|0.12651|0.15011|0.0236|18.65%|25.0k |18.4k | ❌ 基準點  |
-|Linear Regression|0.91|0.10715|0.12314|0.01599|14.92%|20.6k|15.0k| 🟢 略勝  |
-|Random Forest Regression|0.88|0.04986|0.14481|0.09495|190.43%|23.8k|15.9k|❌ 過擬合|
-|XGBoost Regression|0.90|0.00917|0.13300|0.12383|135.01%|23.3k|15.8k|❌ 過擬合 |
-|LightGBM Regression|0.90|0.06029|0.13239|0.07210|119.59%| 21.7k|15.0k|❌ 過擬合|
-|LassoCV|0.91|0.10850|0.12355| 0.01505|13.87%|20.7k|15.1k|🏆 **勝出**|
+|Regressions|R-squared|Train RMSE(Log)|Test RMSE(Log)| RMSE Gap|RMSE Degradation (Train vs Test)(%)|Test RMSE($)|Test MAE($)|Test WMAPE($)|verdict|
+|---|----|---|---|---|----|---|---|---|---|
+|OLS_Linear| 0.87|0.12651|0.15011|0.0236|18.65%|25.0k |18.4k|10.140% | ❌ 基準點  |
+|Linear Regression|0.91|0.10715|0.12314|0.01599|14.92%|20.6k|15.0k|8.262%| 🟢 略勝  |
+|Random Forest Regression|0.88|0.04986|0.14481|0.09495|190.43%|23.8k|15.9k|8.762%|❌ 過擬合|
+|XGBoost Regression|0.90|0.00917|0.13300|0.12383|135.01%|23.3k|15.8k|8.751%|❌ 過擬合 |
+|LightGBM Regression|0.90|0.06029|0.13239|0.07210|119.59%| 21.7k|14.8k|8.305%|❌ 過擬合|
+|LassoCV|0.91|0.10850|0.12355| 0.01505|13.87%|20.7k|15.1k|8.339%|🏆 **勝出**|
 
-- 六種模型的平均絕對誤差百分比 (Test MAPE (<span>$</span>)) 約在 8% ~ 11% 之間 ，達到商業上對於模型準確及格之要求。
+- 六種模型的平均絕對誤差百分比 (Test WMAPE (<span>$</span>)) 約在 8% ~ 11% 之間 ，達到商業上對於模型準確及格之要求。
 - Random Forest Regression 已先透過 GridSearchCV 找出該批資料中最適切的參數，仍得出過度擬合的結果 （RMSE Degradation (Train vs Test)(%): 190.43% ），並且 Test RMSE(Log) : 0.14481 略高於 Linear Regression。在本次特徵工程下，需繼續調整參數才能取得更好的結果，當前參數下 Random Forest 表現不如線性模型。
-- XGBoost Regression 已先透過早停法、CV k fold 方式，找出該批資料中最適切的參數，名稱為 CVxgbModel。Test RMSE(Log) : 0.12086 略低於 Linear Regression，而 Train RMSE(Log) : 0.02713 與 Test RMSE(Log) : 0.12086 ，兩者 RMSE Degradation (Train vs Test)(%): 345.45% 預測結果仍是過度擬合。因 Train RMSE(Log) : 0.02713 ，為極端過度擬合之狀況，造成有高度的 RMSE Degradation。在本次特徵工程下，需繼續調整參數才能取得更好的結果，當前參數下 XGBoost 表現不如線性模型。
-- LightGBM Regression 已先透過 GridSearchCV 找出該批資料中最適切的參數，雖 Test RMSE(Log) : 0.11779 低於 Linear Regression 的 Test RMSE(Log)，然而因 Train RMSE(Log) : 0.06031 造成 RMSE Degradation (Train vs Test)(%): 95.29% 高於 Linear Regression，為過度擬合的結果。在本次特徵工程下，需繼續調整參數才能取得更好的結果，當前參數下 LightGBM 表現不如線性模型。
+- XGBoost Regression 已先透過早停法、CV k fold 方式，找出該批資料中最適切的參數，名稱為 CVxgbModel。Test RMSE(Log) : 0.13300 略低於 Linear Regression，而 XGBoost 的 Train RMSE(Log) : 0.00917 ，故其 RMSE Degradation (Train vs Test)(%): 135.01% 預測結果仍是過度擬合。因 Train RMSE(Log) : 0.00917 ，為極端過度擬合之狀況，造成有高度的 RMSE Degradation。在本次特徵工程下，需繼續調整參數才能取得更好的結果，當前參數下 XGBoost 表現不如線性模型。
+- LightGBM Regression 已先透過 GridSearchCV 找出該批資料中最適切的參數，雖 Test RMSE(Log) : 0.13239 低於 Linear Regression 的 Test RMSE(Log)，然而因 Train RMSE(Log) : 0.06029 造成 RMSE Degradation (Train vs Test)(%): 119.59% 高於 Linear Regression，為過度擬合的結果。在本次特徵工程下，需繼續調整參數才能取得更好的結果，當前參數下 LightGBM 表現不如線性模型。
 - 縱觀樹模型表現，應進行調整參數以進一步改善模型，然考量專案時間成本與效益，採用基礎模型已得出較優結果，故在此專案中選擇線性模型。
 - 觀察數種模型之 Test RMSE(Log)、Test RMSE (<span>$</span>)、Test MAE(<span>$</span>) 三種指標衡量，樹模型的 Test RMSE (<span>$</span>) 相比線性模型高，而 Test MAE (<span>$</span>) 優於線性模型，顯示其對於平均值附近房價之預測準確較高，但對於極端值如豪宅之房價預測較失準。
 - 專案目的為準確預測房價，高額房價的預測失準造成的差異影響較大者須汰除，又因 LassoCV 排除共線性與篩除無相關特徵之特性，故選定 LassoCV 為最終勝出模型。
-上傳 Kaggle 之比較
+
+### 上傳 Kaggle 之比較
 
 |     |Public Score| 
 |------|----------|
 |OLS_Linear|0.15445|
 |LassoCV|0.13276|
+
+顯示的確達到模型改善之效果。
