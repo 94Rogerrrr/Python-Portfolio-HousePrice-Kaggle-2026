@@ -43,10 +43,15 @@ The project aims to identify undervalued properties by building a predictive pri
   |TotalBsmtSF| +414 Sq.Ft 平方英尺| + 3.07% |+6,147 美元|
   |BsmtFinSF1|+432 Sq.Ft 平方英尺| +2.81% |+5,635 美元|
   |BsmtFullBath| +1 room| +3.45%|+6,900 美元|       
-    ##### 考量 ROI 之商業建議
 
--  Neighborhood 特徵中，撈出平均最高的區域為 NridgHt （12.619223），次高者為 NoRidge（12.551264），最高平均的社區跟房價有正相關。
--  SaleCondition 特徵中，最高平均為 Partial (12.464719)，次高者為 Normal (12.003083)，最高平均的項目跟房價有正相關。
+
+  |Top Features|最高表現類別 (Top)|最低表現類別 (Bottom) |兩者溢價差距 premium(%)  |相對 20 萬美元房價提升   |
+  |----|----|-----|-----|-----|
+  |Neighborhood|NridgHt|IDOTRR |+3.49％ |+6,982 美元 |
+  |SaleCondition|Partial |Abnorml|+1.67％| +3,334 美元 |
+
+
+    ##### 考量 ROI 之商業建議
 -  相比地上居住空間與地下室指標之溢價百分比，前者較高，根據數據建議若翻修有預算考量，可優先改善地面上居住空間與設施之完善程度。
 
 
