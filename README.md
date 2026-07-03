@@ -39,8 +39,8 @@ The project aims to identify undervalued properties by building a predictive pri
   |----|----|-----|-----|
   |GrLivArea | +500 Sq.Ft 平方英尺|+12.96%|+25,921 美元|     
   |OverallQual| +1 Level| + 5.33%  |+10,665 美元|
-  |Functional| +1 Level| + 2.96%|+5,939 美元|
   |TotalBsmtSF| +414 Sq.Ft 平方英尺| + 3.07% |+6,147 美元|
+  |Functional| +1 Level| + 2.96%|+5,939 美元|
   |BsmtFinSF1|+432 Sq.Ft 平方英尺| +2.81% |+5,635 美元|
   |BsmtFullBath| +1 room| +3.45%|+6,900 美元|       
 
@@ -53,6 +53,8 @@ The project aims to identify undervalued properties by building a predictive pri
 
     ##### 考量 ROI 之商業建議
 -  相比地上居住空間與地下室指標之溢價百分比，前者較高，根據數據建議若翻修有預算考量，可優先改善地面上居住空間與設施之完善程度。
+-  若房子的地點與主架構已經定案，那麼建議挑選較優質的材料用以建築、裝潢或翻修，以有效提升房價。
+-  若手上的房屋已經大致完成地面上的設施功能，可針對地下室部分完善修建，以提高房價。
 
 
 ## 3. 資料處理 (Data Methodology) 
