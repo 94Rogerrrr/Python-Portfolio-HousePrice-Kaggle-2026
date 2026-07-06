@@ -5,7 +5,7 @@ The project aims to identify undervalued properties by building a predictive pri
 
 ## 1. 專案摘要 (Title & Hook)
 - **標題**：House Price Prediction: Evaluate whether the house price is underestimated.
-- **摘要**：本專案橫跨傳統線性迴歸家族（OLS, Linear and LassoCV) 及樹模型家族 (Random Forest, XGBoost 及 LightGBM) 預測房價，成功將誤差 Test RMSE(Log) 降低至 0.12355，並透過特徵係數得出「居住面積」與「整體品質」為影響房價的最關鍵因素。
+- **摘要**：本專案橫跨傳統線性迴歸家族（OLS, Linear and LassoCV) 及樹模型家族 (Random Forest, XGBoost 及 LightGBM) 預測房價，成功將誤差 Test RMSE(Log) 降低至 0.12355。不僅找出有潛力的投資物件，也透過特徵係數得出「居住面積」與「整體品質」為影響房價的最關鍵因素。
 ## 2. 商業洞察 (Business Insights) 
 ### 初步洞察：
 模型訓練前，資料處理過程中的發現：
@@ -25,9 +25,13 @@ The project aims to identify undervalued properties by building a predictive pri
     - Foundation_CBlock   = -0.33
   <br>可知使用 PConc 材質對房價有正相關，而使用其他材質會有負相關。
 
-### 模型結果分析：
+### 模型結果商業應用：
 本專案執行了數種模型，以 OLS 模型為基準，其他模型與之相較，選取房價誤差小以及過度擬合程度低者。<br>
-多種樹模型之預測誤差 Test RMSE(Log) 小但是 RMSE Degradation (Train vs Test) 與 Test RMSE($)  均明顯大於線性模型，故推論在本次特徵工程下，線性模型表現較佳，可以兼顧最小的均方誤差與過度擬合問題，又 LassoCV 模型會排除共線性或是無相關的特徵項，適合做相關性解讀，故針對此模型保留之特徵進行分析。
+多種樹模型之預測誤差 Test RMSE(Log) 小但是 RMSE Degradation (Train vs Test) 與 Test RMSE($)  均明顯大於線性模型，故推論在本次特徵工程下，線性模型表現較佳，可以兼顧最小的均方誤差與過度擬合問題，又 LassoCV 模型會排除共線性或是無相關的特徵項，故以 LassoCV 模型之預測為基準，找出被低估 15% 之標的。
+
+
+### 模型結果特徵分析：
+LassoCV 模型適合做相關性解讀，故針對此模型保留之特徵進行分析。
 
 #### 在 LassoCV 模型的預測結果
 (放 LassoCV feature best 10 and least 10 圖)
@@ -80,10 +84,10 @@ The project aims to identify undervalued properties by building a predictive pri
           - 保留該觀測值，可使模型能學習到該筆資料於其他正常特徵上的資訊
           - 最高的離群值亦隨 GrLivArea 的資料一起刪除
           - 其相關係數影響不如 GrLivArea 高，故衡量資料的模型學習效果與極端值的影響後，決定予以保留。
-      - 套用 Skewness 檢查資料分佈的偏移狀態，針對分數 > 0.5 之指標套用常態化，即對此類指標取 log 。
+      - 檢查資料分佈的偏移狀態，針對 Skewness 分數 > 0.5 之偏態指標取對數以矯正偏態。 。
       - 將文字資料先做 Target Encoding 轉換成數值類型，計算整份資料之相關係數，選擇其中相關係數高的指標 (Correlation > 0.5)：文字類型共 7 項，數值類型共 10 項。將針對彼此欄位定義制定相對的資料整理邏輯。
       - 17 項指標單位不同以至於數據的尺度差異大，故使用 StandardScaler 降低尺度差異造成的影響。
-      - 首次執行 OLS 模型評估指標顯示有較明顯的異質變異數問題，故刪除殘差分佈超過三個標準差之資料，共 14 筆。
+      - 首次執行 OLS 模型評估指標顯示有較明顯的異質變異數問題，故手動刪除訓練集中，殘差分佈超過三個標準差之資料，共 14 筆。
   - **填補**：
       - 釐清高度相關 17 項指標，其缺失值均為文字型態的無設施，因此補 0
       - 文字資料型態：其中 7 項文字型態，分別依照手冊說明定義映射方式與映射值。
