@@ -45,6 +45,7 @@ The project aims to identify undervalued properties by building a predictive pri
   - 市場實際售價 (Actual Price)：USD$ 110,000
   - 模型預估價值 (Predicted Value) : USD$ 154,075
   - 潛在毛利空間 (Potential Margin): USD$ 44,075 (+ 40%) 
+
 模型高估原因分析 (Key Drivers)：
 _SHAP_linear圖_
 - 從圖中可知此棟房屋的地上居住面積提升房價的幅度最大，顯然其 1,776 平方英尺為亮眼特色。
