@@ -32,9 +32,12 @@ The project aims to identify undervalued properties by building a predictive pri
 初步篩選時發現價差最高的房屋，落在平均價格最低的社區，其他重要特徵表現亦不亮眼，推測以下：
 - 可能有嫌惡設施、事故等等，若希望投資需進一步勘查。
 - 若真實房價區間已經歸在極低價的層級，而 LassoCV 模型的全局特徵訓練，將無法如實預測極低價房價。
+  <br>
+
+  
 故設定安全邊際如下：
-*  真實房價為 10 萬美元以上
-*  OverAll Cond 整體條件有 3 分
+*  真實房價為 USD$ 100,000 以上
+*  OverAllCond 整體條件達 3 分
 
 
 ##### 深度案例分析：
@@ -85,10 +88,10 @@ LassoCV 模型適合做相關性解讀，故針對此模型保留之特徵進行
   - **離群值篩選解讀**：
   - 箱型圖解讀
     - 從 SalePrice、GrLivArea、GarageArea、 TotalBsmtSF、1stFlrSF 等圖片與界外值的位置，可判斷這些欄位之資料並非常態分佈，明顯有右偏分布的傾向。
-    - 實際上是否為右偏分布的狀態，應依據 skew 數值結果
+    - 最後將依據 Skewness 數值結果判斷右偏分佈之指標
 
   - 散佈圖解讀
-    - 從 GrLivArea、GarageArea、 TotalBsmtSF、1stFlrSF 等圖片，離散與密集程度，判斷這些欄位具有不合理的離群值。
+    - 從 GrLivArea、GarageArea、 TotalBsmtSF、1stFlrSF 等圖片，離散與密集程度可知指標具有不合理的離群值。
 
   - 離群值    
     - 綜合散佈圖資訊與查詢結果，有明顯遠離聚集或是遠離趨勢的點，發現 GrLivArea 的兩筆離群值，也正好是其他欄位的離群值項目。故優先刪減這兩筆資料。
