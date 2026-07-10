@@ -48,7 +48,8 @@ The project aims to identify undervalued properties by building a predictive pri
 模型高估原因分析 (Key Drivers)：
 _SHAP_linear圖_
 - 從圖中可知此棟房屋的地上居住面積提升房價的幅度最大，顯然其 1,776 平方英尺為亮眼特色。
-- 其次，其地下室完善面積也有 1,584 平方英尺，也是提升房價的指標
+- 其次，其地下室完善面積也有 1,584 平方英尺，也是提升房價的指標。
+
 綜合以上，預估該房屋雖非處於高價社區，但房價仍有成長空間，預測有潛力高於當前的房價。
 
 ### 模型結果特徵分析：
