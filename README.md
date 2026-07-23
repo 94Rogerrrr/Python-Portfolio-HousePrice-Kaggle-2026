@@ -10,24 +10,20 @@ The project aims to identify undervalued properties by building a predictive pri
 ### 初步洞察：
 模型訓練前，資料處理過程中的發現：
   #### 相關係數：
-  - 查看負相關的數值，發現最低相關為 KitchenAbvGr -0.135907 然而其欄位在說明手冊上卻沒有定義。依據欄位名稱應屬於地面上廚房的相關內容。
+  - 查看負相關的數值，發現最低相關為 KitchenAbvGr -0.134445 然而其欄位在說明手冊上卻沒有定義。依據欄位名稱應屬於地面上廚房的相關內容。
 
   **相關係數熱力圖解讀**
 
   _(這裡放一張漂亮的 SHAP 或特徵重要性圖表)_
   - 發現 1 : 文字資料經過較精確的 Encode 邏輯，且對房價做常態化後，前三項如下，顯示均與房價有高度相關。
-    - 最高者為 OverallQual( 0.80)
-    - 次高者為 Neighborhood(0.73)
-    - 第三名為 GrLivArea(0.71)
-  - 發現 2 : 當地基材質 Foundation 以 One Hot Encoding 處理成不同欄位，其相關係數差異也被凸顯。
-    - Foundation_PConc   = 0.53
-    - Foundation_infrequent_sklearn  = - 0.30
-    - Foundation_CBlock   = -0.33
-  <br>可知使用 PConc 材質對房價有正相關，而使用其他材質會有負相關。
+    - 最高者為 OverallQual( 0.81)
+    - 次高者為 GrLivArea(0.73)
+    - 第三名為 Neighborhood (0.73)
+
 
 ### 模型結果商業應用：
 本專案執行了數種模型，以 OLS 模型為基準，其他模型與之相較，選取房價誤差小以及過度擬合程度低者。<br>
-多種樹模型之預測誤差 Test RMSE(Log) 小但是 RMSE Degradation (Train vs Test) 與 Test RMSE($)  均明顯大於線性模型，故推論在本次特徵工程下，線性模型表現較佳，可以兼顧最小的均方誤差與過度擬合問題，又 LassoCV 模型會排除共線性或是無相關的特徵項，故以 LassoCV 模型之預測為基準，找出被低估 15% 之標的。
+多種樹模型之預測誤差 Test RMSE(Log) 小但是 RMSE Degradation (Train(<span>$</span>) vs Test(<span>$</span>))(%) 與 Test RMSE($)  均明顯大於線性模型，故推論在本次特徵工程下，線性模型表現較佳，可以兼顧最小的均方誤差與過度擬合問題，又 LassoCV 模型會排除共線性或是無相關的特徵項，故以 LassoCV 模型之預測為基準，找出被低估 15% 之標的。
 ##### 安全條件
 初步篩選時發現價差最高的房屋，落在平均價格最低的社區，其他重要特徵表現亦不亮眼，推測以下：
 - 可能有嫌惡設施、事故等等，若希望投資需進一步勘查。
@@ -41,17 +37,18 @@ The project aims to identify undervalued properties by building a predictive pri
 
 
 ##### 深度案例分析：
-目標物件 : HouseID : 00000
-  - 市場實際售價 (Actual Price)：USD$ 110,000
-  - 模型預估價值 (Predicted Value) : USD$ 154,075
-  - 潛在毛利空間 (Potential Margin): USD$ 44,075 (+ 40%) 
+目標物件 : HouseID : 589
+  - 市場實際售價 (Actual Price)：USD$ 143,000
+  - 模型預估價值 (Predicted Value) : USD$ 245,523
+  - 潛在毛利空間 (Potential Margin): USD$ 102,523 (+ 71%) 
 
 模型高估原因分析 (Key Drivers)：
 _SHAP_linear圖_
-- 從圖中可知此棟房屋的地上居住面積提升房價的幅度最大，顯然其 1,776 平方英尺為亮眼特色。
-- 其次，其地下室完善面積也有 1,584 平方英尺，也是提升房價的指標。
+- 從圖中可知此棟房屋的整體條件 Overall Cond 提升房價的幅度最大，顯然房屋狀況為 Very Good 為其亮眼特色。
+- 其次，所使用的交易模式為 Partial，是分類中平均房價最高的等級，亦為預測房屋的加分項目。
+- 最後，其地下室完善面積為 1,324 平方英尺，也相對高幅度地提升房價預測。
 
-綜合以上，預估該房屋雖非處於高價社區，但房價仍有成長空間，預測有潛力高於當前的房價。
+綜合以上，該房屋所處的社區為 ClearCr 屬於中上的上區，雖非昂貴社區，不過房價仍有成長空間，預測有潛力高於當前的房價。
 
 ### 模型結果特徵分析：
 LassoCV 模型適合做相關性解讀，故針對此模型保留之特徵進行分析。
@@ -64,23 +61,24 @@ LassoCV 模型適合做相關性解讀，故針對此模型保留之特徵進行
     ##### 數值資料
   |Top Features|實務變動單位 (約 1 Std.Dev)| 房價溢價佔比 premium(%) |相對 20 萬美元房價提升   |
   |----|----|-----|-----|
-  |GrLivArea | +500 Sq.Ft 平方英尺|+12.96%|+25,921 美元|     
-  |OverallQual| +1 Level| + 5.33%  |+10,665 美元|
-  |TotalBsmtSF| +414 Sq.Ft 平方英尺| + 3.07% |+6,147 美元|
-  |Functional| +1 Level| + 2.96%|+5,939 美元|
-  |BsmtFinSF1|+432 Sq.Ft 平方英尺| +2.81% |+5,635 美元|
-  |BsmtFullBath| +1 room| +3.45%|+6,900 美元|       
+  |GrLivArea | +500 Sq.Ft 平方英尺|+13.88%|+27,768 美元|     
+  |OverallQual| +1 Level| + 5.77% |+11,542 美元|
+  |OverallCond| +1 Level| + 3.54%  |+7,095 美元|
+  |Functional| +1 Level| + 3.30%|+6,605 美元|
+  |TotalBsmtSF| +410 Sq.Ft 平方英尺| + 3.07%  |+6,143 美元|
+  |BsmtFullBath| +1 room| +2.71% |+5,438 美元|
+  |GarageCars| +1 car| +2.60% |+5,213 美元|       
 
     ##### 文字資料
   |Top Features|最高表現類別 (Top)|最低表現類別 (Bottom) |兩者溢價差距 premium(%)  |相對 20 萬美元房價提升   |
   |----|----|-----|-----|-----|
-  |Neighborhood|NridgHt|IDOTRR |+3.49％ |+6,982 美元 |
-  |SaleCondition|Partial |Abnorml|+1.67％| +3,334 美元 |
+  |Neighborhood|NridgHt|BrkSide |+2.69％ |+5,381 美元 |
+  |SaleCondition|Partial |Abnorml|+1.50％| +3,003 美元 |
 
 
     #### 考量 ROI 之商業建議
 -  相比地上居住空間與地下室指標之溢價百分比，前者較高，根據數據建議若翻修有預算考量，可優先改善地面上居住空間與設施之完善程度。
--  若房子的地點與主架構已經定案，那麼建議挑選較優質的材料用以建築、裝潢或翻修，以有效提升房價。
+-  若房子的地點與地上總面積已固定，建議完善房屋使用狀況，以有效提升房價。
 -  若手上的房屋已經大致完成地面上的設施功能，可針對地下室部分完善修建，以提高房價。
 
 
@@ -108,14 +106,14 @@ LassoCV 模型適合做相關性解讀，故針對此模型保留之特徵進行
           - 最高的離群值亦隨 GrLivArea 的資料一起刪除
           - 其相關係數影響不如 GrLivArea 高，故衡量資料的模型學習效果與極端值的影響後，決定予以保留。
       - 檢查資料分佈的偏移狀態，針對 Skewness 分數 > 0.5 之偏態指標取對數以矯正偏態。 。
-      - 將文字資料先做 Target Encoding 轉換成數值類型，計算整份資料之相關係數，選擇其中相關係數高的指標 (Correlation > 0.5)：文字類型共 7 項，數值類型共 10 項。將針對彼此欄位定義制定相對的資料整理邏輯。
-      - 17 項指標單位不同以至於數據的尺度差異大，故使用 StandardScaler 降低尺度差異造成的影響。
+      - 將文字資料先做 Target Encoding 轉換成數值類型，計算整份資料之相關係數，選擇其中相關係數高的指標 (Correlation > 0.5)：文字類型共 6 項，數值類型共 9 項。將針對彼此欄位定義制定相對的資料整理邏輯。
+      - 15 項指標單位不同以至於數據的尺度差異大，故使用 StandardScaler 降低尺度差異造成的影響。
       - 首次執行 OLS 模型評估指標顯示有較明顯的異質變異數問題，故手動刪除訓練集中，殘差分佈超過三個標準差之資料，共 14 筆。
   - **填補**：
-      - 釐清高度相關 17 項指標，其缺失值均為文字型態的無設施，因此補 0
-      - 文字資料型態：其中 7 項文字型態，分別依照手冊說明定義映射方式與映射值。
-      - Neighborhood 套用 Target Encoding；Foundation 套用 One-Hot Encoding，其餘套用手動 mapping 轉換。
-      - 透過 VIF 檢查，發現拆成 one hot encoding 的 Foundation 地基材質出現設計矩陣奇異的狀況，造成完美共線性。因此排除數量最小的欄位，以解決線性模型檢定的問題。
+      - 釐清高度相關 15 項指標，其缺失值均為文字型態的無設施，因此補 0
+      - 文字資料型態：其中 6 項文字型態，分別依照手冊說明定義映射方式與映射值。
+      - Neighborhood 套用 Target Encoding，其餘套用手動 mapping 轉換。
+
 
 - #### 針對隨機森林、線性模型
     - **清洗**：
