@@ -5,7 +5,7 @@ The project aims to identify undervalued properties by building a predictive pri
 
 ## 1. 專案摘要 (Title & Hook)
 - **標題**：House Price Prediction: Evaluate whether the house price is underestimated.
-- **摘要**：本專案橫跨傳統線性迴歸家族（OLS, Linear and LassoCV) 及樹模型家族 (Random Forest, XGBoost 及 LightGBM) 預測房價，成功將誤差 Test RMSE(Log) 降低至 0.12355。不僅找出有潛力的投資物件，也透過特徵係數得出「居住面積」與「整體品質」為影響房價的最關鍵因素。
+- **摘要**：本專案橫跨傳統線性迴歸家族（OLS, Linear and LassoCV) 及樹模型家族 (Random Forest, XGBoost 及 LightGBM) 預測房價，成功將誤差 Test RMSE(Log) 降低至 0.13746。不僅找出有潛力的投資物件，也透過特徵係數得出「居住面積」與「整體品質」為影響房價的最關鍵因素。
 ## 2. 商業洞察 (Business Insights) 
 ### 初步洞察：
 模型訓練前，資料處理過程中的發現：
@@ -23,11 +23,13 @@ The project aims to identify undervalued properties by building a predictive pri
 
 ### 模型結果商業應用：
 本專案執行了數種模型，以 OLS 模型為基準，其他模型與之相較，選取房價誤差小以及過度擬合程度低者。<br>
-多種樹模型之預測誤差 Test RMSE(Log) 小但是 RMSE Degradation (Train(<span>$</span>) vs Test(<span>$</span>))(%) 與 Test RMSE($)  均明顯大於線性模型，故推論在本次特徵工程下，線性模型表現較佳，可以兼顧最小的均方誤差與過度擬合問題，又 LassoCV 模型會排除共線性或是無相關的特徵項，故以 LassoCV 模型之預測為基準，找出被低估 15% 之標的。
+多種樹模型之預測誤差 Test RMSE(Log) 小但是 RMSE Degradation (Train(<span>$</span>) vs Test(<span>$</span>))(%) 與 Test RMSE($)  均明顯大於線性模型，故推論在本次特徵工程下，線性模型表現較佳，可以兼顧最小的均方誤差與過度擬合問題，又 LassoCV 模型會排除共線性或是無相關的特徵項，故以 LassoCV 模型作全域特徵解釋，找出被低估 15% 之標的。
+
 ##### 安全條件
 初步篩選時發現價差最高的房屋，落在平均價格最低的社區，其他重要特徵表現亦不亮眼，推測以下：
 - 可能有嫌惡設施、事故等等，若希望投資需進一步勘查。
 - 若真實房價區間已經歸在極低價的層級，而 LassoCV 模型的全局特徵訓練，將無法如實預測極低價房價。
+- 透過殘差分析發現，LassoCV 模型預測在房價低於 USD$107,000 下時， MAPE 為 16%，其上則有 7 ~8% 的誤差，故設定 USD$ 100,000 為門檻。
   <br>
 
   
@@ -106,7 +108,7 @@ LassoCV 模型適合做相關性解讀，故針對此模型保留之特徵進行
           - 最高的離群值亦隨 GrLivArea 的資料一起刪除
           - 其相關係數影響不如 GrLivArea 高，故衡量資料的模型學習效果與極端值的影響後，決定予以保留。
       - 檢查資料分佈的偏移狀態，針對 Skewness 分數 > 0.5 之偏態指標取對數以矯正偏態。 。
-      - 將文字資料先做 Target Encoding 轉換成數值類型，計算整份資料之相關係數，選擇其中相關係數高的指標 (Correlation > 0.5)：文字類型共 6 項，數值類型共 9 項。將針對彼此欄位定義制定相對的資料整理邏輯。
+      - 將文字資料先做 Target Encoding 轉換成數值類型，計算 train 資料之相關係數，選擇其中相關係數高的指標 (Correlation > 0.5)：文字類型共 6 項，數值類型共 9 項。將針對彼此欄位定義制定相對的資料整理邏輯。
       - 15 項指標單位不同以至於數據的尺度差異大，故使用 StandardScaler 降低尺度差異造成的影響。
       - 首次執行 OLS 模型評估指標顯示有較明顯的異質變異數問題，故手動刪除訓練集中，殘差分佈超過三個標準差之資料，共 12 筆。
   - **填補**：
@@ -138,7 +140,7 @@ LassoCV 模型適合做相關性解讀，故針對此模型保留之特徵進行
 
 |Regressions|R-squared|Train RMSE($)|Test RMSE($)|RMSE Degradation (Train(<span>$</span>) vs Test(<span>$</span>))(%)|Train RMSE(Log)|Test RMSE(Log)|RMSE Gap|Test MAE($)|Test WMAPE($)|verdict|
 |---|----|---|---|---|----|---|---|---|---|---|
-|OLS_Linear| 0.86|25.7k|30.5k |18.64%|0.13047|0.15935|0.02888| 19.0k|10.632% | ❌ 基準點  |
+|OLS_11_Linear| 0.86|25.7k|30.5k |18.64%|0.13047|0.15935|0.02888| 19.0k|10.632% | ❌ 基準點  |
 |Linear Regression|0.91|19.0k|23.0k|20.67%|0.10523|0.13015|0.02493|15.1k|8.464%| 🟢 略勝  |
 |Random Forest Regression|0.88|11.1k|30.0k|169.57%|0.04924|0.14909|0.09984|16.7k|9.359%|❌ 過擬合|
 |XGBoost Regression|0.90|2.3k|26.1k|1035.64%|0.01277|0.13735|0.12457|15.7k| 8.812%|❌ 過擬合 |
@@ -151,14 +153,15 @@ LassoCV 模型適合做相關性解讀，故針對此模型保留之特徵進行
 - XGBoost Regression 已先透過早停法、CV k fold 方式，找出該批資料中最適切的參數，名稱為 CVxgbModel。Test RMSE(Log) : 0.13735 略高於 Linear Regression，而 XGBoost 的 Train RMSE(<span>$</span>) 約 2.3k 造成 RMSE Degradation (Train(<span>$</span>) vs Test(<span>$</span>))(%): 1035.64% 預測結果仍是過度擬合。因 Train RMSE(<span>$</span>): 2.3k  ，為極端過度擬合之狀況，造成有高度的 RMSE Degradation。在本次特徵工程下，需繼續調整參數才能取得更好的結果，當前參數下 XGBoost 表現不如線性模型。
 - LightGBM Regression 已先透過 GridSearchCV 找出該批資料中最適切的參數，發現 Test RMSE(Log) : 0.13846 略高於 Linear Regression，又 Train RMSE(<span>$</span>):13.4k 造成 RMSE Degradation (Train(<span>$</span>) vs Test(<span>$</span>))(%): 108.06% 高於 Linear Regression 的對應數值，為較明顯的過度擬合的結果。在本次特徵工程下，需繼續調整參數才能取得更好的結果，當前參數下 LightGBM 表現不如線性模型。
 - 縱觀樹模型表現，應進行調整參數以進一步改善模型，然考量專案時間成本與效益，採用基礎模型已得出較優結果，故在此專案中選擇線性模型。
-- 觀察數種模型之 Test RMSE(Log)、Test RMSE (<span>$</span>)、Test MAE(<span>$</span>) 三種指標衡量，樹模型的 Test RMSE (<span>$</span>) 相比線性模型高，而 Test MAE (<span>$</span>) 優於線性模型，顯示其對於平均值附近房價之預測準確較高，但對於極端值如豪宅之房價預測較失準。
-- 專案目的為準確預測房價，高額房價的預測失準造成的差異影響較大者須汰除。雖然 LassoCV 之 Test RMSE(Log) : 0.13081 略高於 Linear Regression，不過 Test RMSE(<span>$</span>) ：22.6k 以及 RMSE Degradation (Train(<span>$</span>) vs Test(<span>$</span>))(%): 15.30% 均比 Linear Regression 表現佳，又 LassoCV 排除共線性與篩除無相關特徵之特性，故選定 LassoCV 為最終勝出模型。
+- 觀察數種模型之 Test RMSE(Log)、Test RMSE (<span>$</span>)、Test MAE(<span>$</span>) 三種指標衡量，樹模型的 Test RMSE (<span>$</span>) 相比線性模型高，而 Test MAE (<span>$</span>) 優於線性模型，顯示其對於平均值附近房價之預測較準確，但對於極端值如豪宅之房價預測較失準。
+- 專案目的為準確預測房價，因此即使樹模型的 Test MAE(<span>$</span>) 表現勝過線性模型，然而考量其 Test RMSE(<span>$</span>) 較大以及 RMSE Degradation (Train(<span>$</span>) vs Test(<span>$</span>))(%) 極高，顯示樹模型面對未知資料或是極端值易產生較大的預測偏差，因此捨棄極端值下可能有較高誤差的樹模型，選擇相對穩定，且 RMSE Degradation (Train(<span>$</span>) vs Test(<span>$</span>))(%) 退化率較低的線性模型
+- 雖然 LassoCV  Test RMSE(Log) : 0.13081 略高於 Linear Regression，不過 Test RMSE(<span>$</span>) ：22.6k 以及 RMSE Degradation (Train(<span>$</span>) vs Test(<span>$</span>))(%): 15.30% 均比 Linear Regression 表現佳，又 LassoCV 排除共線性與篩除無相關特徵之特性，故選定 LassoCV 為最終勝出模型。
 
 ### 上傳 Kaggle 之比較
 
 |     |Public Score| 
 |------|----------|
 |OLS_Linear|0.15940|
-|LassoCV|0.13276|
+|LassoCV|0.13746|
 
 顯示的確達到模型改善之效果。
