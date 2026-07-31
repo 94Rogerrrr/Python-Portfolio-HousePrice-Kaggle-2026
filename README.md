@@ -23,7 +23,7 @@ The project aims to identify undervalued properties by building a predictive pri
 
 ### 模型結果商業應用：
 本專案執行了數種模型，以 OLS 模型為基準，其他模型與之相較，選取房價誤差小以及過度擬合程度低者。<br>
-多種樹模型之預測誤差 Test RMSE(Log) 、 RMSE Degradation (Train(<span>$</span>) vs Test(<span>$</span>))(%) 與 Test RMSE($)  均明顯大於線性模型，故推論在本次特徵工程下，線性模型表現較佳，可以兼顧最小的均方誤差與過度擬合問題，又 LassoCV 模型會排除共線性或是無相關的特徵項，故以 LassoCV 模型作全域特徵解釋，找出被低估 15% 之標的。
+多種樹模型之預測誤差 Test RMSE(Log)、 RMSE Degradation (Train(<span>$</span>) vs Test(<span>$</span>))(%) 與 Test RMSE($)  均明顯大於線性模型，故推論在本次特徵工程下，線性模型表現較佳，可以兼顧最小的均方誤差與過度擬合問題，又 LassoCV 模型會排除共線性或是無相關的特徵項，故以 LassoCV 模型作全域特徵解釋，找出被低估 15% 之標的。
 
 ##### 安全條件
 初步篩選時發現價差最高的房屋，落在平均價格最低的社區，其他重要特徵表現亦不亮眼，推測以下：
@@ -35,18 +35,18 @@ The project aims to identify undervalued properties by building a predictive pri
   
 故設定安全邊際如下：
 *  真實房價為 USD$ 107,000 以上
-*  OverAllCond 整體屋況達 3 分
+*  OverallCond 整體屋況達 3 分
 
 
 ##### 深度案例分析：
 目標物件 : HouseID : 589
-  - 市場實際售價 (Actual Price)：USD$ 143,000
-  - 模型預估價值 (Predicted Value) : USD$ 245,523
+  - 市場實際售價 (Actual Price):USD$ 143,000
+  - 模型預估價值 (Predicted Value): USD$ 245,523
   - 潛在毛利空間 (Potential Margin): USD$ 102,523 (+ 71%) 
 
 模型高估原因分析 (Key Drivers)：
 _SHAP_linear圖_
-- 從圖中可知此棟房屋的整體屋況 Overall Cond 提升房價的幅度最大，顯然房屋狀況為 Very Good 為其亮眼特色。
+- 從圖中可知此棟房屋的整體屋況 OverallCond 提升房價的幅度最大，顯然房屋狀況為 Very Good 為其亮眼特色。
 - 其次，所使用的交易模式為 Partial，是分類中平均房價最高的等級，亦為預測房屋的加分項目。
 - 最後，其地下室完善面積為 1,324 平方英尺，也相對高幅度地提升房價預測。
 
