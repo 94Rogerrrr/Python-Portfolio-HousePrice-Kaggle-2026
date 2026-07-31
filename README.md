@@ -1,7 +1,7 @@
 # Python-Portfolio-HousePrice_Kaggle_20260305
 It's a repository for Python data analysis portfolio about Kaggle Data - House Price Prediction. Here are .ipynb, requirement.txt, README.md in this repository.
 
-The project aims to identify undervalued properties by building a predictive pricing model based on the Kaggle Dataset(https://www.kaggle.com/datasets/shashanknecrothapa/ames-housing-dataset)
+The project aims to identify undervalued properties by building a predictive pricing model based on the Kaggle Dataset (https://www.kaggle.com/datasets/shashanknecrothapa/ames-housing-dataset)
 
 ## 1. 專案摘要 (Title & Hook)
 - **標題**：House Price Prediction: Evaluate whether the house price is underestimated.
@@ -10,7 +10,7 @@ The project aims to identify undervalued properties by building a predictive pri
 ### 初步洞察：
 模型訓練前，資料處理過程中的發現：
   #### 相關係數：
-  - 查看負相關的數值，發現最低相關為 KitchenAbvGr -0.134445 然而其欄位在說明手冊上卻沒有定義。依據欄位名稱應屬於地面上廚房的相關內容。
+  - 查看負相關的數值，發現最低相關為 KitchenAbvGr -0.134445，然而其欄位在說明手冊上卻沒有定義。依據欄位名稱應屬於地面上廚房的相關內容。
 
   **相關係數熱力圖解讀**
 
@@ -29,7 +29,7 @@ The project aims to identify undervalued properties by building a predictive pri
 初步篩選時發現價差最高的房屋，落在平均價格最低的社區，其他重要特徵表現亦不亮眼，推測以下：
 - 可能有嫌惡設施、事故等等，若希望投資需進一步勘查。
 - 若真實房價區間已經歸在極低價的層級，而 LassoCV 模型的全局特徵訓練，將無法如實預測極低價房價。
-- 透過殘差分析發現，LassoCV 模型預測在房價低於 USD$ 107,000 時， MAPE 為 16%，其上則有 7~8% 的誤差，故設定 USD$ 107,000 為門檻。
+- 透過殘差分析發現，LassoCV 模型預測在房價低於 USD$ 107,000 時，MAPE 為 16%，其上則有 7~8% 的誤差，故設定 USD$ 107,000 為門檻。
   <br>
 
   
@@ -50,7 +50,7 @@ _SHAP_linear圖_
 - 其次，所使用的交易模式為 Partial，是分類中平均房價最高的等級，亦為預測房屋的加分項目。
 - 最後，其地下室完善面積為 1,324 平方英尺，也相對高幅度地提升房價預測。
 
-綜合以上，該房屋所處的社區為 ClearCr 屬於中上的社區，雖非昂貴社區，不過房價仍有成長空間，預測有潛力高於當前的房價。
+綜合以上，該房屋所處的社區為 ClearCr，屬於中上的社區，雖非昂貴社區，不過房價仍有成長空間，預測有潛力高於當前的房價。
 
 ### 模型結果特徵分析：
 LassoCV 模型適合做相關性解讀，故針對此模型保留之特徵進行分析。
@@ -147,7 +147,7 @@ LassoCV 模型適合做相關性解讀，故針對此模型保留之特徵進行
 |LightGBM Regression|0.90|13.4k|27.9k |108.06%|0.05892|0.13846|0.07954|15.9k|8.946%|❌ 過擬合|
 |LassoCV|0.91|19.6k|22.6k|15.30%|0.10834|0.13081|0.02247|14.9k|8.381%|🏆 **勝出**|
 
-- 六種模型的平均絕對誤差百分比 (Test WMAPE (<span>$</span>)) 約在 8% ~ 11% 之間，達到商業上對於模型準確及格之要求。
+- 六種模型的平均絕對誤差百分比 (Test WMAPE(<span>$</span>)) 約在 8% ~ 11% 之間，達到商業上對於模型準確及格之要求。
 - Linear Regression 模型的 R-squared: 0.91，Test RMSE(<span>$</span>): 23.0k 與 Test RMSE(Log): 0.13015 三項指標比 OLS_11_Linear 表現亮眼。唯獨在美金誤差的指標上 RMSE Degradation (Train(<span>$</span>) vs Test(<span>$</span>))(%): 20.67% 衰退率略高於 OLS_11_Linear。綜合以上，Linear Regression 將暫時成為目前最佳表現的模型。
 - Random Forest Regression 已先透過 GridSearchCV 找出該批資料中最適切的參數，仍得出過度擬合的結果 (RMSE Degradation (Train(<span>$</span>) vs Test(<span>$</span>))(%): 169.57%)，並且 Test RMSE(Log): 0.14909 略高於 Linear Regression。在本次特徵工程下，需繼續調整參數才能取得更好的結果，當前參數下 Random Forest 表現不如線性模型。
 - XGBoost Regression 已先透過早停法、CV k fold 方式，找出該批資料中最適切的參數，名稱為 CVxgbModel。Test RMSE(Log): 0.13735 略高於 Linear Regression，而 XGBoost 的 Train RMSE(<span>$</span>) 僅約 2.3k 造成 RMSE Degradation (Train(<span>$</span>) vs Test(<span>$</span>))(%): 1035.64% 為極端過度擬合之狀況。在本次特徵工程下，需繼續調整參數才能取得更好的結果，當前參數下 XGBoost 表現不如線性模型。
