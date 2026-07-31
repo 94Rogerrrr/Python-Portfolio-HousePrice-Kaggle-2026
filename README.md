@@ -5,7 +5,7 @@ The project aims to identify undervalued properties by building a predictive pri
 
 ## 1. 專案摘要 (Title & Hook)
 - **標題**：House Price Prediction: Evaluate whether the house price is underestimated.
-- **摘要**：本專案橫跨傳統線性迴歸家族（OLS, Linear and LassoCV） 及樹模型家族 (Random Forest, XGBoost 及 LightGBM) 預測房價，成功將誤差 Test RMSE(Log) 降低至 0.13081，並且有 Kaggle Public Score 0.13746 的成績。不僅找出有潛力的投資物件，也透過特徵係數得出「居住面積」與「整體品質」為影響房價的最關鍵因素。
+- **摘要**：本專案橫跨傳統線性迴歸家族 (OLS, Linear and LassoCV) 及樹模型家族 (Random Forest, XGBoost 及 LightGBM) 預測房價，成功將誤差 Test RMSE(Log) 降低至 0.13081，並且有 Kaggle Public Score 0.13746 的成績。不僅找出有潛力的投資物件，也透過特徵係數得出「居住面積」與「整體品質」為影響房價的最關鍵因素。
 ## 2. 商業洞察 (Business Insights) 
 ### 初步洞察：
 模型訓練前，資料處理過程中的發現：
@@ -23,13 +23,13 @@ The project aims to identify undervalued properties by building a predictive pri
 
 ### 模型結果商業應用：
 本專案執行了數種模型，以 OLS 模型為基準，其他模型與之相較，選取房價誤差小以及過度擬合程度低者。<br>
-多種樹模型之預測誤差 Test RMSE(Log)、 RMSE Degradation (Train(<span>$</span>) vs Test(<span>$</span>))(%) 與 Test RMSE($)  均明顯大於線性模型，故推論在本次特徵工程下，線性模型表現較佳，可以兼顧最小的均方誤差與過度擬合問題，又 LassoCV 模型會排除共線性或是無相關的特徵項，故以 LassoCV 模型作全域特徵解釋，找出被低估 15% 之標的。
+多種樹模型之預測誤差 Test RMSE(Log)、 RMSE Degradation (Train(<span>$</span>) vs Test(<span>$</span>))(%) 與 Test RMSE($) 均明顯大於線性模型，故推論在本次特徵工程下，線性模型表現較佳，可以兼顧最小的均方誤差與過度擬合問題，又 LassoCV 模型會排除共線性或是無相關的特徵項，故以 LassoCV 模型作全域特徵解釋，找出被低估 15% 之標的。
 
 ##### 安全條件
 初步篩選時發現價差最高的房屋，落在平均價格最低的社區，其他重要特徵表現亦不亮眼，推測以下：
 - 可能有嫌惡設施、事故等等，若希望投資需進一步勘查。
 - 若真實房價區間已經歸在極低價的層級，而 LassoCV 模型的全局特徵訓練，將無法如實預測極低價房價。
-- 透過殘差分析發現，LassoCV 模型預測在房價低於 USD$107,000 下時， MAPE 為 16%，其上則有 7 ~8% 的誤差，故設定 USD$ 107,000 為門檻。
+- 透過殘差分析發現，LassoCV 模型預測在房價低於 USD$ 107,000 時， MAPE 為 16%，其上則有 7 ~8% 的誤差，故設定 USD$ 107,000 為門檻。
   <br>
 
   
@@ -40,7 +40,7 @@ The project aims to identify undervalued properties by building a predictive pri
 
 ##### 深度案例分析：
 目標物件 : HouseID : 589
-  - 市場實際售價 (Actual Price):USD$ 143,000
+  - 市場實際售價 (Actual Price): USD$ 143,000
   - 模型預估價值 (Predicted Value): USD$ 245,523
   - 潛在毛利空間 (Potential Margin): USD$ 102,523 (+ 71%) 
 
@@ -133,7 +133,7 @@ LassoCV 模型適合做相關性解讀，故針對此模型保留之特徵進行
 ## 4. 模型表現 (Model Performance)
 羅列專案中執行模型學習成果，提供衡量標準與綜合考量。 <br>
 衡量標準之公式：
-*  RMSE Degradation (Train(<span>$</span>) vs Test(<span>$</span>))(%) = (Test RMSE(<span>$</span>) - Train RMSE(<span>$</span>)) / Train RMSE(<span>$</span>)， 用以衡量模型對未見資料的衰退程度
+*  RMSE Degradation (Train(<span>$</span>) vs Test(<span>$</span>))(%) = (Test RMSE(<span>$</span>) - Train RMSE(<span>$</span>)) / Train RMSE(<span>$</span>)，用以衡量模型對未見資料的衰退程度
 *  RMSE Gap = Test RMSE(Log) - Train RMSE(Log)
 
 **各模型衡量指標** 
@@ -153,7 +153,7 @@ LassoCV 模型適合做相關性解讀，故針對此模型保留之特徵進行
 - XGBoost Regression 已先透過早停法、CV k fold 方式，找出該批資料中最適切的參數，名稱為 CVxgbModel。Test RMSE(Log): 0.13735 略高於 Linear Regression，而 XGBoost 的 Train RMSE(<span>$</span>) 僅約 2.3k 造成 RMSE Degradation (Train(<span>$</span>) vs Test(<span>$</span>))(%): 1035.64% 為極端過度擬合之狀況。在本次特徵工程下，需繼續調整參數才能取得更好的結果，當前參數下 XGBoost 表現不如線性模型。
 - LightGBM Regression 已先透過 GridSearchCV 找出該批資料中最適切的參數，發現 Test RMSE(Log): 0.13846 略高於 Linear Regression，又 Train RMSE(<span>$</span>): 13.4k 造成 RMSE Degradation (Train(<span>$</span>) vs Test(<span>$</span>))(%): 108.06% 高於 Linear Regression 的對應數值，為較明顯的過度擬合的結果。在本次特徵工程下，需繼續調整參數才能取得更好的結果，當前參數下 LightGBM 表現不如線性模型。
 - 應對樹模型進行調整參數，才能進一步改善樹模型表現，然考量專案時間成本與效益，採用基礎模型已得出較優結果，故在此專案中選擇線性模型。
-- 專案目的為準確預測房價，樹模型的 Test MAE(<span>$</span>) 、Test RMSE(<span>$</span>) 以及 RMSE Degradation (Train(<span>$</span>) vs Test(<span>$</span>))(%) 三項指標的數值均大於 `scikit-learn` 線性模型 (Linear Regression 與 LassoCV)的指標，因此選擇預測誤差較小、相對穩定，且 RMSE Degradation (Train(<span>$</span>) vs Test(<span>$</span>))(%) 退化率較低的線性模型。
+- 專案目的為準確預測房價，樹模型的 Test MAE(<span>$</span>)、Test RMSE(<span>$</span>) 以及 RMSE Degradation (Train(<span>$</span>) vs Test(<span>$</span>))(%) 三項指標的數值均大於 `scikit-learn` 線性模型 (Linear Regression 與 LassoCV) 的指標，因此選擇預測誤差較小、相對穩定，且 RMSE Degradation (Train(<span>$</span>) vs Test(<span>$</span>))(%) 退化率較低的線性模型。
 - 雖然 LassoCV  Test RMSE(Log): 0.13081 略高於 Linear Regression，不過 Test RMSE(<span>$</span>): 22.6k 以及 RMSE Degradation (Train(<span>$</span>) vs Test(<span>$</span>))(%): 15.30% 均比 Linear Regression 表現佳，又 LassoCV 排除共線性與篩除無相關特徵之特性，故選定 LassoCV 為最終勝出模型。
 
 ### 上傳 Kaggle 之比較
