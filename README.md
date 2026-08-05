@@ -1,11 +1,11 @@
 # Python-Portfolio-HousePrice_Kaggle_20260305
 It's a repository for Python data analysis portfolio about Kaggle Data - House Price Prediction. Here are .ipynb, requirement.txt, README.md in this repository.
 
-The project aims to identify undervalued properties by building a predictive pricing model based on the Kaggle Dataset (https://www.kaggle.com/datasets/shashanknecrothapa/ames-housing-dataset)
+The project aims to identify undervalued properties by building a predictive pricing model based on the Kaggle Dataset (https://www.kaggle.com/datasets/shashanknecrothapa/ames-housing-dataset).
 
 ## 1. 專案摘要 (Title & Hook)
 - **標題**：House Price Prediction: Evaluate whether the house price is underestimated.
-- **摘要**：本專案橫跨傳統線性迴歸家族 (OLS, Linear and LassoCV) 及樹模型家族 (Random Forest, XGBoost 及 LightGBM) 預測房價，成功將誤差 Test RMSE(Log) 降低至 0.13081，並且有 Kaggle Public Score 0.13746 的成績。不僅找出有潛力的投資物件，也透過特徵係數得出「居住面積」與「整體品質」為影響房價的最關鍵因素。
+- **摘要**：本專案橫跨傳統線性迴歸家族 (OLS、Linear 及 LassoCV) 及樹模型家族 (Random Forest、XGBoost 及 LightGBM) 預測房價，成功將誤差 Test RMSE(Log) 降低至 0.13081，並且有 Kaggle Public Score 0.13746 的成績。不僅找出有潛力的投資物件，也透過特徵係數得出「居住面積」與「整體品質」為影響房價的最關鍵因素。
 ## 2. 商業洞察 (Business Insights) 
 ### 初步洞察：
 模型訓練前，資料處理過程中的發現：
@@ -15,7 +15,7 @@ The project aims to identify undervalued properties by building a predictive pri
   **相關係數熱力圖解讀**
 
   _(這裡放一張漂亮的 SHAP 或特徵重要性圖表)_
-  - 發現 1: 文字資料經過較精確的 Encode 邏輯，且對房價做常態化後，前三項如下，顯示均與房價有高度相關。
+  - 發現文字資料經過較精確的 Encode 邏輯，且對房價做常態化後，前三項如下，顯示均與房價有高度相關。
     - 最高者為 OverallQual (0.81)
     - 次高者為 GrLivArea (0.73)
     - 第三名為 Neighborhood (0.73)
@@ -23,17 +23,18 @@ The project aims to identify undervalued properties by building a predictive pri
 
 ### 模型結果商業應用：
 本專案執行了數種模型，以 OLS 模型為基準，其他模型與之相較，選取房價誤差小以及過度擬合程度低者。<br>
-多種樹模型之預測誤差 Test RMSE(Log)、RMSE Degradation (Train(<span>$</span>) vs Test(<span>$</span>))(%) 與 Test RMSE($) 均明顯大於線性模型，故推論在本次特徵工程下，線性模型表現較佳，可以兼顧最小的均方誤差與過度擬合問題，又 LassoCV 模型會排除共線性或是無相關的特徵項，故以 LassoCV 模型作全域特徵解釋，找出被低估 15% 之標的。
+多種樹模型之預測誤差 Test RMSE(Log)、RMSE Degradation (Train(<span>$</span>) vs Test(<span>$</span>))(%) 與 Test RMSE(<span>$</span>) 均明顯大於線性模型，故推論在本次特徵工程下，線性模型表現較佳，可以兼顧最小的均方誤差與過度擬合問題，又 LassoCV 模型會排除共線性或是無相關的特徵項，故以 LassoCV 模型作全域特徵解釋，找出被低估 15% 之標的。
 
 ##### 安全條件
 初步篩選時發現價差最高的房屋，落在平均價格最低的社區，其他重要特徵表現亦不亮眼，推測以下：
 - 可能有嫌惡設施、事故等等，若希望投資需進一步勘查。
 - 若真實房價區間已經歸在極低價的層級，而 LassoCV 模型的全局特徵訓練，將無法如實預測極低價房價。
+- 房屋的基本設施狀況不可以過於破敗。
 - 透過殘差分析發現，LassoCV 模型預測在房價低於 USD$ 107,000 時，MAPE 為 16%，其上則有 7~8% 的誤差，故設定 USD$ 107,000 為門檻。
   <br>
 
   
-故設定安全邊際如下：
+設定安全邊際如下：
 *  真實房價為 USD$ 107,000 以上
 *  OverallCond 整體屋況達 3 分
 
@@ -42,7 +43,7 @@ The project aims to identify undervalued properties by building a predictive pri
 目標物件: HouseID: 589
   - 市場實際售價 (Actual Price): USD$ 143,000
   - 模型預估價值 (Predicted Value): USD$ 245,523
-  - 潛在毛利空間 (Potential Margin): USD$ 102,523 (+ 71%) 
+  - 潛在毛利空間 (Potential Margin): USD$ 102,523 (+71%) 
 
 模型高估原因分析 (Key Drivers)：
 _SHAP_linear圖_
@@ -56,7 +57,7 @@ _SHAP_linear圖_
 LassoCV 模型適合做相關性解讀，故針對此模型保留之特徵進行分析。
 
 (放 LassoCV feature best 10 and least 10 圖)
-- 挑選最高與最低的 10 項特徵係數繪製水平直方圖。最高 10 項的特徵的影響力大於最低 10 項的負面影響力，顯示本次特徵工程在 LassoCV 的學習下，雖有扣分之特徵但其負面影響不如正面的特徵影響大。
+- 挑選最高與最低的 10 項特徵係數繪製水平直方圖。最高 10 項特徵的影響力大於最低 10 項的負面影響力，顯示本次特徵工程在 LassoCV 的學習下，雖有扣分之特徵但其負面影響不如正面的特徵影響大。
 - 特徵係數最高者為 GrLivArea 地面上居住面積，次高者為 OverallQual 整體品質，顯示這兩項指標會高度與房價正相關。
     #### 特徵係數之商業價值轉換
 
@@ -64,10 +65,10 @@ LassoCV 模型適合做相關性解讀，故針對此模型保留之特徵進行
   |Top Features|實務變動單位 (約 1 Std.Dev)| 房價溢價佔比 premium(%) |相對 20 萬美元房價提升   |
   |----|----|-----|-----|
   |GrLivArea | +500 Sq.Ft 平方英尺|+13.88%|+27,768 美元|     
-  |OverallQual| +1 Level| + 5.77% |+11,542 美元|
-  |OverallCond| +1 Level| + 3.54%  |+7,095 美元|
-  |Functional| +1 Level| + 3.30%|+6,605 美元|
-  |TotalBsmtSF| +410 Sq.Ft 平方英尺| + 3.07%  |+6,143 美元|
+  |OverallQual| +1 Level| +5.77% |+11,542 美元|
+  |OverallCond| +1 Level| +3.54%  |+7,095 美元|
+  |Functional| +1 Level| +3.30%|+6,605 美元|
+  |TotalBsmtSF| +410 Sq.Ft 平方英尺| +3.07%  |+6,143 美元|
   |BsmtFullBath| +1 room| +2.71% |+5,438 美元|
   |GarageCars| +1 car| +2.60% |+5,213 美元|       
 
@@ -85,7 +86,7 @@ LassoCV 模型適合做相關性解讀，故針對此模型保留之特徵進行
 
 
 ## 3. 資料處理 (Data Methodology) 
-摘要較詳細的資料處理細節，說明本專案透過何種方式釐清資料，並如何判斷非數值類型資料之轉碼依據。根據模型特性分成兩種資料處理流程：「針對 OLS 線性模型」與「針對 `scikit-learn` 的 Linear, LassoCV 以及樹模型」，並於專案初期先完成資料切割，且僅根據帶有 "train" 等的關鍵字之資料集作為相關係數、特殊條件等判斷來源。
+摘要較詳細的資料處理細節，說明本專案透過何種方式釐清資料，並如何判斷非數值類型資料之轉碼依據。根據模型特性分成兩種資料處理流程：「針對 OLS 線性模型」與「針對 `scikit-learn` 的 Linear、LassoCV 以及樹模型」，並於專案初期先完成資料切割，且僅根據帶有 "train" 等的關鍵字之資料集作為相關係數、特殊條件等判斷來源。
 - #### 針對 OLS 線性模型
   - **離群值篩選解讀**：
   - 箱型圖解讀
@@ -117,10 +118,10 @@ LassoCV 模型適合做相關性解讀，故針對此模型保留之特徵進行
       - Neighborhood 套用 Target Encoding，其餘套用手動 mapping 轉換。
 
 
-- #### 針對 `scikit-learn` 的 Linear, LassoCV 及樹模型
+- #### 針對 `scikit-learn` 的 Linear、LassoCV 及樹模型
     - **清洗**：
         - 明確可以定義有順序的文字內容轉成 Ordinal Encoding
-        - 指標基數 >=6 者採用 Target Encoding 
+        - 指標基數 >= 6 者採用 Target Encoding 
         - 其餘轉成 One Hot Encoding 
         - 刪除原本透過相關係數找出的兩筆 GrLivArea 之離群值
     - **填補**：
@@ -138,7 +139,7 @@ LassoCV 模型適合做相關性解讀，故針對此模型保留之特徵進行
 
 **各模型衡量指標** 
 
-|Regressions|R-squared|Train RMSE($)|Test RMSE($)|RMSE Degradation (Train(<span>$</span>) vs Test(<span>$</span>))(%)|Train RMSE(Log)|Test RMSE(Log)|RMSE Gap|Test MAE($)|Test WMAPE($)|verdict|
+|Regressions|R-squared|Train RMSE(<span>$</span>)|Test RMSE(<span>$</span>)|RMSE Degradation (Train(<span>$</span>) vs Test(<span>$</span>))(%)|Train RMSE(Log)|Test RMSE(Log)|RMSE Gap|Test MAE(<span>$</span>)|Test WMAPE(<span>$</span>)|verdict|
 |---|----|---|---|---|----|---|---|---|---|---|
 |OLS_11_Linear| 0.86|25.7k|30.5k |18.64%|0.13047|0.15935|0.02888| 19.0k|10.632% | ❌ 基準點  |
 |Linear Regression|0.91|19.0k|23.0k|20.67%|0.10523|0.13015|0.02493|15.1k|8.464%| 🟢 略勝  |
