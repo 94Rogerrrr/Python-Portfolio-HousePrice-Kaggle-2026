@@ -15,6 +15,7 @@ The project aims to identify undervalued properties by building a predictive pri
   **相關係數熱力圖解讀**
 
   _(這裡放一張漂亮的 SHAP 或特徵重要性圖表)_
+  ![相關係數熱力圖](./charts/OLS_11_heatMap.png)
   - 發現文字資料經過較精確的 Encode 邏輯，且對房價做常態化後，前三項如下，顯示均與房價有高度相關。
     - 最高者為 OverallQual (0.81)
     - 次高者為 GrLivArea (0.73)
