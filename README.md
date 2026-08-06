@@ -46,6 +46,7 @@ The project aims to identify undervalued properties by building a predictive pri
 
 模型高估原因分析 (Key Drivers)：
 _SHAP_linear圖_
+
 - 從圖中可知此棟房屋的整體屋況 OverallCond 提升房價的幅度最大，顯然房屋狀況為 Very Good 為其亮眼特色。
 - 其次，所使用的交易模式為 Partial，是分類中平均房價最高的等級，亦為預測房屋的加分項目。
 - 最後，其地下室完善面積為 1,324 平方英尺，也相對高幅度地提升房價預測。
@@ -55,7 +56,7 @@ _SHAP_linear圖_
 ### 模型結果特徵分析：
 LassoCV 模型適合做相關性解讀，故針對此模型保留之特徵進行分析。
 
-(放 LassoCV feature best 10 and least 10 圖)
+![LassoCV feature best 10 and least 10 圖](charts/LassoCV_best10AndLeast10.png)
 - 挑選最高與最低的 10 項特徵係數繪製水平直方圖。最高 10 項特徵的影響力大於最低 10 項的負面影響力，顯示本次特徵工程在 LassoCV 的學習下，雖有扣分之特徵但其負面影響不如正面的特徵影響大。
 - 特徵係數最高者為 GrLivArea 地面上居住面積，次高者為 OverallQual 整體品質，顯示這兩項指標會高度與房價正相關。
     #### 特徵係數之商業價值轉換
