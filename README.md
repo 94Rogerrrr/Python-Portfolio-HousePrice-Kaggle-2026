@@ -1,4 +1,4 @@
-# Python-Portfolio-HousePrice_Kaggle_20260305
+# Python-Portfolio-HousePrice_Kaggle_2026
 It's a repository for Python data analysis portfolio about Kaggle Data - House Price Prediction. Here are .ipynb, requirement.txt, README.md in this repository.
 
 The project aims to identify undervalued properties by building a predictive pricing model based on the Kaggle Dataset (https://www.kaggle.com/datasets/shashanknecrothapa/ames-housing-dataset).
@@ -45,8 +45,8 @@ The project aims to identify undervalued properties by building a predictive pri
   - 潛在毛利空間 (Potential Margin): USD$ 102,523 (+71%) 
 
 模型高估原因分析 (Key Drivers)：
-_SHAP_linear圖_
 
+![SHAP Linear 分析](charts/housre_under_shap.png)
 - 從圖中可知此棟房屋的整體屋況 OverallCond 提升房價的幅度最大，顯然房屋狀況為 Very Good 為其亮眼特色。
 - 其次，所使用的交易模式為 Partial，是分類中平均房價最高的等級，亦為預測房屋的加分項目。
 - 最後，其地下室完善面積為 1,324 平方英尺，也相對高幅度地提升房價預測。
