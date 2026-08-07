@@ -145,14 +145,14 @@ LassoCV 模型適合做相關性解讀，故針對此模型保留之特徵進行
 |---|----|---|---|---|----|---|---|---|---|---|
 |OLS_11_Linear| 0.86|25.7k|30.5k |18.64%|0.13047|0.15935|0.02888| 19.0k|10.632% | ❌ 基準點  |
 |Linear Regression|0.91|19.0k|23.0k|20.67%|0.10523|0.13015|0.02493|15.1k|8.464%| 🟢 略勝  |
-|Random Forest Regression|0.88|11.1k|30.0k|169.57%|0.04924|0.14909|0.09984|16.7k|9.359%|❌ 過擬合|
+|Random Forest Regression|0.88|11.0k|29.9k|171.02%|0.04864|0.14942|0.10078|16.8k|9.402%|❌ 過擬合|
 |XGBoost Regression|0.90|2.3k|26.1k|1035.64%|0.01277|0.13735|0.12457|15.7k| 8.812%|❌ 過擬合 |
 |LightGBM Regression|0.90|13.4k|27.9k |108.06%|0.05892|0.13846|0.07954|15.9k|8.946%|❌ 過擬合|
 |LassoCV|0.91|19.6k|22.6k|15.30%|0.10834|0.13081|0.02247|14.9k|8.381%|🏆 **勝出**|
 
 - 六種模型的平均絕對誤差百分比 (Test WMAPE(<span>$</span>)) 約在 8% ~ 11% 之間，達到商業上對於模型準確及格之要求。
 - Linear Regression 模型的 R-squared: 0.91，Test RMSE(<span>$</span>): 23.0k 與 Test RMSE(Log): 0.13015 三項指標比 OLS_11_Linear 表現亮眼。唯獨在美金誤差的指標上 RMSE Degradation (Train(<span>$</span>) vs Test(<span>$</span>))(%): 20.67% 衰退率略高於 OLS_11_Linear。綜合以上，Linear Regression 將暫時成為目前最佳表現的模型。
-- Random Forest Regression 已先透過 GridSearchCV 找出該批資料中最適切的參數，仍得出過度擬合的結果 (RMSE Degradation (Train(<span>$</span>) vs Test(<span>$</span>))(%): 169.57%)，並且 Test RMSE(Log): 0.14909 略高於 Linear Regression。在本次特徵工程下，需繼續調整參數才能取得更好的結果，當前參數下 Random Forest 表現不如線性模型。
+- Random Forest Regression 已先透過 GridSearchCV 找出該批資料中最適切的參數，仍得出過度擬合的結果 (RMSE Degradation (Train(<span>$</span>) vs Test(<span>$</span>))(%): 171.02%)，並且 Test RMSE(Log): 0.14942 略高於 Linear Regression。在本次特徵工程下，需繼續調整參數才能取得更好的結果，當前參數下 Random Forest 表現不如線性模型。
 - XGBoost Regression 已先透過早停法、CV k fold 方式，找出該批資料中最適切的參數，名稱為 CVxgbModel。Test RMSE(Log): 0.13735 略高於 Linear Regression，而 XGBoost 的 Train RMSE(<span>$</span>) 僅約 2.3k 造成 RMSE Degradation (Train(<span>$</span>) vs Test(<span>$</span>))(%): 1035.64% 為極端過度擬合之狀況。在本次特徵工程下，需繼續調整參數才能取得更好的結果，當前參數下 XGBoost 表現不如線性模型。
 - LightGBM Regression 已先透過 GridSearchCV 找出該批資料中最適切的參數，發現 Test RMSE(Log): 0.13846 略高於 Linear Regression，又 Train RMSE(<span>$</span>): 13.4k 造成 RMSE Degradation (Train(<span>$</span>) vs Test(<span>$</span>))(%): 108.06% 高於 Linear Regression 的對應數值，為較明顯的過度擬合的結果。在本次特徵工程下，需繼續調整參數才能取得更好的結果，當前參數下 LightGBM 表現不如線性模型。
 - 應對樹模型進行調整參數，才能進一步改善樹模型表現，然考量專案時間成本與效益，採用基礎模型已得出較優結果，故在此專案中選擇線性模型。
