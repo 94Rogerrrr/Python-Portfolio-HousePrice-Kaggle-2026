@@ -143,7 +143,7 @@ LassoCV 模型適合做相關性解讀，故針對此模型保留之特徵進行
 
 |Regressions|R-squared|Train RMSE(<span>$</span>)|Test RMSE(<span>$</span>)|RMSE Degradation (Train(<span>$</span>) vs Test(<span>$</span>))(%)|Train RMSE(Log)|Test RMSE(Log)|RMSE Gap|Test MAE(<span>$</span>)|Test WMAPE(<span>$</span>)|verdict|
 |---|----|---|---|---|----|---|---|---|---|---|
-|OLS_11_Linear| 0.86|25.7k|30.5k |18.64%|0.13047|0.15935|0.02888| 19.0k|10.632% | ❌ 基準點  |
+|OLS_11_Linear| 0.87|25.8k|31.0k|19.91%|0.12869|0.15805|0.02936| 18.8k|10.564% | ❌ 基準點  |
 |Linear Regression|0.91|19.0k|23.0k|20.67%|0.10523|0.13015|0.02493|15.1k|8.464%| 🟢 略勝  |
 |Random Forest Regression|0.88|11.0k|29.9k|171.02%|0.04864|0.14942|0.10078|16.8k|9.402%|❌ 過擬合|
 |XGBoost Regression|0.90|2.3k|26.1k|1035.64%|0.01277|0.13735|0.12457|15.7k| 8.812%|❌ 過擬合 |
