@@ -71,7 +71,7 @@ LassoCV 模型適合做相關性解讀，故針對此模型保留之特徵進行
   |OverallCond| +1 Level| +3.54%  |+7,095 美元|
   |Functional| +1 Level| +3.30%|+6,605 美元|
   |TotalBsmtSF| +410 Sq.Ft 平方英尺| +3.07%  |+6,143 美元|
-  |BsmtFullBath| +1 room| +2.71% |+5,438 美元|
+  |BsmtFinSF1| +430 Sq.Ft 平方英尺| +3.04% |+6,089 美元|
   |GarageCars| +1 car| +2.60% |+5,213 美元|       
 
     ##### 文字資料
