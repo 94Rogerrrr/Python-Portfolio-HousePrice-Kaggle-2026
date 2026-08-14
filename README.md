@@ -3,9 +3,14 @@ It's a repository for Python data analysis portfolio about Kaggle Data - House P
 
 The project aims to identify undervalued properties by building a predictive pricing model based on the Kaggle Dataset (https://www.kaggle.com/datasets/shashanknecrothapa/ames-housing-dataset).
 
-## 1. 專案摘要 (Title & Hook)
+## 1. 專案摘要 (Title)
 - **標題**：House Price Prediction: Evaluate whether the house price is underestimated.
 - **摘要**：本專案橫跨傳統線性迴歸家族 (OLS、Linear 及 LassoCV) 及樹模型家族 (Random Forest、XGBoost 及 LightGBM) 預測房價，成功將誤差 Test RMSE(Log) 降低至 0.13081，並且有 Kaggle Public Score 0.13746 的成績。不僅找出有潛力的投資物件，也透過特徵係數得出「居住面積」與「整體品質」為影響房價的最關鍵因素。
+
+### 快速開始 (Quick Start)
+1. 安裝所需環境與套件：`pip install -r requirements.txt`
+2. 執行 Jupyter Notebook：打開 `[Portfolio]Kaggle_HousePricePrediction.ipynb` 即可重現資料清洗與預測結果。
+   
 ## 2. 商業洞察 (Business Insights) 
 ### 初步洞察：
 模型訓練前，資料處理過程中的發現：
