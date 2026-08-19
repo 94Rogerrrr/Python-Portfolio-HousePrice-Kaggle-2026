@@ -172,3 +172,6 @@ LassoCV 模型適合做相關性解讀，故針對此模型保留之特徵進行
 |LassoCV|0.13746|
 
 顯示的確達到模型改善之效果。
+
+## 授權聲明 (License)
+Copyright © 2026 94Rogerrrr. All rights reserved.
